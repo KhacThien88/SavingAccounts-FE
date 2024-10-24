@@ -1,0 +1,121 @@
+{
+	"env": {
+		"browser": true,
+		"node": true,
+		"es2021": true
+	},
+	"plugins": [
+		"prettier",
+		"react",
+		"simple-import-sort",
+		"module-resolver",
+		"eslint-plugin-react-hooks",
+		"unused-imports"
+	],
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaVersion": "latest",
+		"ecmaFeatures": {
+			"jsx": true,
+			"modules": true
+		}
+	},
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"plugin:prettier/recommended",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:react/recommended",
+		"eslint-config-prettier",
+		"prettier",
+		"plugin:import/errors",
+		"plugin:import/warnings",
+		"plugin:import/typescript"
+	],
+	"ignorePatterns": ["node_modules/*", ".next/*", ".out/*", "!.prettierrc", "!.eslintrc", "**/*.type.ts"],
+	"rules": {
+		"prettier/prettier": [
+			"warn",
+			{
+				"arrowParens": "always",
+				"bracketSameLine": false,
+				"bracketSpacing": true,
+				"semi": true,
+				"experimentalTernaries": false,
+				"singleQuote": false,
+				"jsxSingleQuote": false,
+				"quoteProps": "as-needed",
+				"trailingComma": "all",
+				"singleAttributePerLine": true,
+				"htmlWhitespaceSensitivity": "css",
+				"proseWrap": "preserve",
+				"printWidth": 120,
+				"tabWidth": 4,
+				"useTabs": true,
+				"embeddedLanguageFormatting": "auto",
+				"endOfLine": "auto"
+			}
+		],
+		"simple-import-sort/imports": [
+			"error",
+			{
+				"groups": [
+					// Import React and all things in 'react' package first
+					["^react", "^@?\\w"],
+					// Import custom hooks
+					["^use[A-Z].*"],
+					// Parent imports. Put `..` last.
+					["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+					// Other relative imports. Put same-folder imports and `.` last.
+					["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+					// Import internal files alphabetically with alias path
+					[
+						"^@/assets(/.*)?$",
+						"^@/components(/.*)?$",
+						"^@/constants(/.*)?$",
+						"^@/contexts(/.*)?$",
+						"^@/hooks(/.*)?$",
+						"^@/libs(/.*)?$",
+						"^@/pages(/.*)?$",
+						"^@/services(/.*)?$",
+						"^@/utils(/.*)?$",
+						"^@/icons(/.*)?$",
+						"^@/types(/.*)?$"
+					],
+					// Import styles (css files)
+					["^.+\\.?(css)$"]
+				]
+			}
+		],
+		"simple-import-sort/exports": "error",
+		"no-unused-vars": "warn",
+		"@typescript-eslint/no-unused-vars": "warn",
+		"react/prop-types": "off",
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "warn",
+		"@typescript-eslint/no-explicit-any": "off"
+	},
+	"settings": {
+		"import/resolver": {
+			"typescript": {
+				"alwaysTryTypes": true,
+				"project": "./tsconfig.json"
+			},
+			"babel-module": {
+				"alias": {
+					"@/assets": ["./src/assets"],
+					"@/components": ["./src/components"],
+					"@/constants": ["./src/constants"],
+					"@/contexts": ["./src/contexts"],
+					"@/hooks": ["./src/hooks"],
+					"@/libs": ["./src/libs"],
+					"@/pages": ["./src/pages"],
+					"@/services": ["./src/services"],
+					"@/utils": ["./src/utils"],
+					"@/icons": ["./src/icons"],
+					"@/types": ["./src/types"]
+				}
+			}
+		}
+	}
+}
