@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { DatePicker, Input, Space, Table, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
@@ -8,73 +8,88 @@ import Layout from "../Layout/Layout";
 
 import { Transaction } from "./HistoryUser.type";
 
-const transactions: Transaction[] = [
-	{
-		IdHistory: "1",
-		Change: 328.85,
-		DateTransfer: "2022-01-15",
-		Note: "Salary Payment",
-	},
-	{
-		IdHistory: "2",
-		Change: -106.58,
-		DateTransfer: "2022-01-15",
-		Note: "Grocery Shopping",
-	},
-	{
-		IdHistory: "3",
-		Change: 275.43,
-		DateTransfer: "2021-12-16",
-		Note: "Freelance Work",
-	},
-	{
-		IdHistory: "4",
-		Change: 202.87,
-		DateTransfer: "2021-11-23",
-		Note: "Project Bonus",
-	},
-	{
-		IdHistory: "5",
-		Change: -80.0,
-		DateTransfer: "2022-02-01",
-		Note: "Utilities Bill",
-	},
-	{
-		IdHistory: "6",
-		Change: 150.75,
-		DateTransfer: "2022-02-03",
-		Note: "Stock Dividend",
-	},
-	{
-		IdHistory: "7",
-		Change: -45.5,
-		DateTransfer: "2022-02-05",
-		Note: "Dinner Out",
-	},
-	{
-		IdHistory: "8",
-		Change: 100.0,
-		DateTransfer: "2022-02-10",
-		Note: "Gift",
-	},
-	{
-		IdHistory: "9",
-		Change: 300.0,
-		DateTransfer: "2022-02-15",
-		Note: "Consulting Fee",
-	},
-	{
-		IdHistory: "10",
-		Change: -120.0,
-		DateTransfer: "2022-02-18",
-		Note: "Car Repair",
-	},
-];
+import { GetHistoryAPI } from "@/components/CRUD/CRUD";
+
+// const transactions: Transaction[] = [
+// 	{
+// 		IdHistory: "1",
+// 		Change: 328.85,
+// 		DateTransfer: "2022-01-15",
+// 		Note: "Salary Payment",
+// 	},
+// 	{
+// 		IdHistory: "2",
+// 		Change: -106.58,
+// 		DateTransfer: "2022-01-15",
+// 		Note: "Grocery Shopping",
+// 	},
+// 	{
+// 		IdHistory: "3",
+// 		Change: 275.43,
+// 		DateTransfer: "2021-12-16",
+// 		Note: "Freelance Work",
+// 	},
+// 	{
+// 		IdHistory: "4",
+// 		Change: 202.87,
+// 		DateTransfer: "2021-11-23",
+// 		Note: "Project Bonus",
+// 	},
+// 	{
+// 		IdHistory: "5",
+// 		Change: -80.0,
+// 		DateTransfer: "2022-02-01",
+// 		Note: "Utilities Bill",
+// 	},
+// 	{
+// 		IdHistory: "6",
+// 		Change: 150.75,
+// 		DateTransfer: "2022-02-03",
+// 		Note: "Stock Dividend",
+// 	},
+// 	{
+// 		IdHistory: "7",
+// 		Change: -45.5,
+// 		DateTransfer: "2022-02-05",
+// 		Note: "Dinner Out",
+// 	},
+// 	{
+// 		IdHistory: "8",
+// 		Change: 100.0,
+// 		DateTransfer: "2022-02-10",
+// 		Note: "Gift",
+// 	},
+// 	{
+// 		IdHistory: "9",
+// 		Change: 300.0,
+// 		DateTransfer: "2022-02-15",
+// 		Note: "Consulting Fee",
+// 	},
+// 	{
+// 		IdHistory: "10",
+// 		Change: -120.0,
+// 		DateTransfer: "2022-02-18",
+// 		Note: "Car Repair",
+// 	},
+// ];
 
 const HistoryUsers: React.FC = () => {
 	const [searchText, setSearchText] = useState<string>("");
 	const [selectedDate, setSelectedDate] = useState<string>("");
+	const [transactions, setTransactions] = useState<Transaction[]>();
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await GetHistoryAPI("1");
+				console.log(response.data);
+				setTransactions(response.data);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
 
+		fetchData();
+	}, []);
 	const handleSearch = (value: string) => {
 		setSearchText(value);
 	};
@@ -112,8 +127,8 @@ const HistoryUsers: React.FC = () => {
 		},
 	];
 
-	const filteredTransactions = transactions.filter((transaction) => {
-		const matchNote = transaction.Note.toLowerCase().includes(searchText.toLowerCase());
+	const filteredTransactions = transactions?.filter((transaction) => {
+		const matchNote = transaction?.Note?.toLowerCase().includes(searchText?.toLowerCase());
 		const matchDate = selectedDate ? transaction.DateTransfer === selectedDate : true;
 		return matchNote && matchDate;
 	});
@@ -130,7 +145,7 @@ const HistoryUsers: React.FC = () => {
 		}, {});
 	};
 
-	const groupedTransactions = groupTransactionsByDate(transactions.slice(0, 10));
+	const groupedTransactions = transactions ? groupTransactionsByDate(transactions.slice(0, 10)) : {};
 
 	return (
 		<Layout>
