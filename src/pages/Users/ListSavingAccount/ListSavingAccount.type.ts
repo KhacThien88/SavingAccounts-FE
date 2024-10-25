@@ -1,9 +1,9 @@
 export type SavingAccount = {
 	IdSavingAccount: string;
 	NameOfSavingAccount: string;
-	Deposits: string;
+	Deposits: number;
 	Balance: number;
-	Withdraw: string;
+	Withdraw: number;
 	DateOpened: string;
 	Term: string;
 };
