@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { Button, Input, Select } from "antd";
 
 import Layout from "../Layout/Layout";
 
+import { Card } from "./MyWallet.type";
+
+import { GetListCardAPI } from "@/components/CRUD/CRUD";
+
 const { Option } = Select;
 
 const MyWallet: React.FC = () => {
+	const [ListCard, setListCard] = useState<Card[]>([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await GetListCardAPI("1");
+				console.log(response.data);
+				setListCard(response.data);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	// Array of background colors for cards
+	const cardColors = ["bg-blue-600", "bg-yellow-400", "bg-green-500", "bg-red-500"];
+
 	return (
 		<Layout>
 			<div className="mx-auto max-w-7xl p-8">
@@ -19,10 +42,6 @@ const MyWallet: React.FC = () => {
 
 					{/* Notification and avatar on the right */}
 					<div className="flex items-center">
-						<Input.Search
-							placeholder="Search..."
-							className="mr-4 w-64"
-						/>
 						<button className="relative p-2 text-gray-600 hover:text-gray-900">
 							<FiBell size={24} />
 							<span className="absolute right-0 top-0 inline-block h-2 w-2 rounded-full bg-red-500"></span>
@@ -41,34 +60,25 @@ const MyWallet: React.FC = () => {
 				<div className="mb-6">
 					<h2 className="mb-4 text-xl font-semibold text-gray-800">My Card</h2>
 					<div className="flex gap-4">
-						<div className="w-1/3 rounded-lg bg-blue-600 p-6 text-white shadow-md">
-							<div className="flex justify-between">
-								<span className="material-icons-outlined">credit_card</span>
-								<img
-									src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
-									alt="MasterCard"
-									className="h-8"
-								/>
+						{ListCard.map((card, index) => (
+							<div
+								key={card.IdCard}
+								className={`w-1/3 rounded-lg p-6 text-white shadow-md ${cardColors[index % cardColors.length]}`}
+							>
+								<div className="flex justify-between">
+									<span className="material-icons-outlined">credit_card</span>
+									<img
+										src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
+										alt="MasterCard"
+										className="h-8"
+									/>
+								</div>
+								<p className="mt-4 text-sm">Total Balance</p>
+								<h3 className="text-2xl font-semibold">${card.Balance.toFixed(2)}</h3>
+								<p className="mt-2">**** **** ** {card.CardNumber.slice(-4)}</p>
+								<p className="mt-1">{new Date(card.DateOpened).toLocaleDateString()}</p>
 							</div>
-							<p className="mt-4 text-sm">Total Balance</p>
-							<h3 className="text-2xl font-semibold">$219.78</h3>
-							<p className="mt-2">**** **** ** 3783</p>
-							<p className="mt-1">05/22</p>
-						</div>
-						<div className="w-1/3 rounded-lg bg-yellow-400 p-6 text-white shadow-md">
-							<div className="flex justify-between">
-								<span className="material-icons-outlined">credit_card</span>
-								<img
-									src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
-									alt="MasterCard"
-									className="h-8"
-								/>
-							</div>
-							<p className="mt-4 text-sm">Total Balance</p>
-							<h3 className="text-2xl font-semibold">$219.78</h3>
-							<p className="mt-2">**** **** ** 3783</p>
-							<p className="mt-1">05/22</p>
-						</div>
+						))}
 					</div>
 				</div>
 
@@ -128,7 +138,7 @@ const MyWallet: React.FC = () => {
 								className="mt-1 w-full"
 							>
 								<Option value="bank1">3 months</Option>
-								<Option value="bank2">6 months </Option>
+								<Option value="bank2">6 months</Option>
 								<Option value="bank3">No limited</Option>
 							</Select>
 						</div>

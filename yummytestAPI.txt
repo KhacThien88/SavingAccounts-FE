@@ -1,0 +1,109 @@
+import React, { useEffect, useState } from "react";
+
+import { getTodosAPI } from "./components/CRUD/CRUD";
+
+interface Todo {
+	id: number;
+	name: string;
+	isComplete: boolean;
+}
+
+const App: React.FC = () => {
+	const [data, setData] = useState<Todo[]>([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await GetHistoryAPI();
+				setData(response.data);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	return (
+		<div className="min-h-screen bg-gray-100 p-6">
+			<h1 className="mb-4 text-2xl font-bold text-blue-600">Data from API:</h1>
+			<ul className="list-disc pl-5">
+				{data.map((item) => (
+					<li
+						key={item.id}
+						className="mb-2 rounded border border-gray-200 bg-white p-2 shadow"
+					>
+						{`ID: ${item.id}, Name: ${item.name}, Completed: ${item.isComplete ? "Yes" : "No"}`}
+					</li>
+				))}
+			</ul>
+		</div>
+	);
+};
+
+export default App;
+
+
+
+const transactions: Transaction[] = [
+	{
+		IdHistory: "1",
+		Change: 328.85,
+		DateTransfer: "2022-01-15",
+		Note: "Salary Payment",
+	},
+	{
+		IdHistory: "2",
+		Change: -106.58,
+		DateTransfer: "2022-01-15",
+		Note: "Grocery Shopping",
+	},
+	{
+		IdHistory: "3",
+		Change: 275.43,
+		DateTransfer: "2021-12-16",
+		Note: "Freelance Work",
+	},
+	{
+		IdHistory: "4",
+		Change: 202.87,
+		DateTransfer: "2021-11-23",
+		Note: "Project Bonus",
+	},
+	{
+		IdHistory: "5",
+		Change: -80.0,
+		DateTransfer: "2022-02-01",
+		Note: "Utilities Bill",
+	},
+	{
+		IdHistory: "6",
+		Change: 150.75,
+		DateTransfer: "2022-02-03",
+		Note: "Stock Dividend",
+	},
+	{
+		IdHistory: "7",
+		Change: -45.5,
+		DateTransfer: "2022-02-05",
+		Note: "Dinner Out",
+	},
+	{
+		IdHistory: "8",
+		Change: 100.0,
+		DateTransfer: "2022-02-10",
+		Note: "Gift",
+	},
+	{
+		IdHistory: "9",
+		Change: 300.0,
+		DateTransfer: "2022-02-15",
+		Note: "Consulting Fee",
+	},
+	{
+		IdHistory: "10",
+		Change: -120.0,
+		DateTransfer: "2022-02-18",
+		Note: "Car Repair",
+	},
+];
