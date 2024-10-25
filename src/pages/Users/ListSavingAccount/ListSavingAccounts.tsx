@@ -5,41 +5,53 @@ import moment from "moment";
 
 import Layout from "../Layout/Layout";
 
-interface SavingAccount {
-	key: string;
-	name: string;
-	deposits: string;
-	balance: string;
-	withdraw: string; // New withdraw property
-	date: string;
-}
+import { SavingAccount } from "./ListSavingAccount.type";
 
 const savingAccounts: SavingAccount[] = [
 	{
-		key: "1",
-		name: "Alice Smith",
-		deposits: "+ $500.00",
-		withdraw: "$0.00",
-		balance: "$1500.00",
-		date: "2024-10-01",
-	},
-	{ key: "2", name: "John Doe", deposits: "- $200.00", withdraw: "$200.00", balance: "$1300.00", date: "2024-10-03" },
-	{ key: "3", name: "Emma Brown", deposits: "+ $300.00", withdraw: "$0.00", balance: "$1600.00", date: "2024-10-05" },
-	{
-		key: "4",
-		name: "Michael Lee",
-		deposits: "- $100.00",
-		withdraw: "$100.00",
-		balance: "$1500.00",
-		date: "2024-10-06",
+		IdSavingAccount: "1",
+		NameOfSavingAccount: "Alice Smith",
+		Deposits: "+ $500.00",
+		Withdraw: "$0.00",
+		Balance: 1500.0, // Now a number
+		DateOpened: "2024-10-01",
+		Term: "6 months",
 	},
 	{
-		key: "5",
-		name: "Sophia Davis",
-		deposits: "+ $700.00",
-		withdraw: "$0.00",
-		balance: "$2200.00",
-		date: "2024-10-07",
+		IdSavingAccount: "2",
+		NameOfSavingAccount: "John Doe",
+		Deposits: "- $200.00",
+		Withdraw: "$200.00",
+		Balance: 1300.0,
+		DateOpened: "2024-10-03",
+		Term: "12 months",
+	},
+	{
+		IdSavingAccount: "3",
+		NameOfSavingAccount: "Emma Brown",
+		Deposits: "+ $300.00",
+		Withdraw: "$0.00",
+		Balance: 1600.0,
+		DateOpened: "2024-10-05",
+		Term: "3 months",
+	},
+	{
+		IdSavingAccount: "4",
+		NameOfSavingAccount: "Michael Lee",
+		Deposits: "- $100.00",
+		Withdraw: "$100.00",
+		Balance: 1500.0,
+		DateOpened: "2024-10-06",
+		Term: "6 months",
+	},
+	{
+		IdSavingAccount: "5",
+		NameOfSavingAccount: "Sophia Davis",
+		Deposits: "+ $700.00",
+		Withdraw: "$0.00",
+		Balance: 2200.0,
+		DateOpened: "2024-10-07",
+		Term: "No limited",
 	},
 ];
 
@@ -59,37 +71,44 @@ const ListSavingAccounts: React.FC = () => {
 
 	const columns: ColumnType<SavingAccount>[] = [
 		{
-			title: "Name",
-			dataIndex: "name",
-			key: "name",
+			title: "Name Of Saving Account",
+			dataIndex: "NameOfSavingAccount",
+			key: "NameOfSavingAccount",
 		},
 		{
-			title: "Date",
-			dataIndex: "date",
-			key: "date",
+			title: "Date Opened",
+			dataIndex: "DateOpened",
+			key: "DateOpened",
 			render: (date) => moment(date).format("DD MMM YYYY"),
 		},
 		{
 			title: "Deposits",
-			dataIndex: "deposits",
-			key: "deposits",
+			dataIndex: "Deposits",
+			key: "Deposits",
 			render: (deposits, record) => <Tag color={deposits.startsWith("+") ? "green" : "red"}>{deposits}</Tag>,
 		},
 		{
 			title: "Withdraw",
-			dataIndex: "withdraw",
-			key: "withdraw",
+			dataIndex: "Withdraw",
+			key: "Withdraw",
+			render: (withdraw) => <Tag color={withdraw !== "$0.00" ? "red" : "default"}>{withdraw}</Tag>,
 		},
 		{
 			title: "Balance",
-			dataIndex: "balance",
-			key: "balance",
+			dataIndex: "Balance",
+			key: "Balance",
+			render: (balance) => `$${balance.toLocaleString()}`, // Format number as currency
+		},
+		{
+			title: "Term",
+			dataIndex: "Term",
+			key: "Term",
 		},
 	];
 
 	const filteredSavingAccounts = savingAccounts.filter((account) => {
-		const matchName = account.name.toLowerCase().includes(searchText.toLowerCase());
-		const matchDate = selectedDate ? account.date === selectedDate : true;
+		const matchName = account.NameOfSavingAccount.toLowerCase().includes(searchText.toLowerCase());
+		const matchDate = selectedDate ? account.DateOpened === selectedDate : true;
 		return matchName && matchDate;
 	});
 
@@ -112,6 +131,7 @@ const ListSavingAccounts: React.FC = () => {
 					columns={columns}
 					dataSource={filteredSavingAccounts}
 					pagination={{ pageSize: 5 }}
+					rowKey="IdSavingAccount"
 				/>
 			</div>
 		</Layout>

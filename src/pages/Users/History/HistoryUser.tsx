@@ -10,73 +10,11 @@ import { Transaction } from "./HistoryUser.type";
 
 import { GetHistoryAPI } from "@/components/CRUD/CRUD";
 
-// const transactions: Transaction[] = [
-// 	{
-// 		IdHistory: "1",
-// 		Change: 328.85,
-// 		DateTransfer: "2022-01-15",
-// 		Note: "Salary Payment",
-// 	},
-// 	{
-// 		IdHistory: "2",
-// 		Change: -106.58,
-// 		DateTransfer: "2022-01-15",
-// 		Note: "Grocery Shopping",
-// 	},
-// 	{
-// 		IdHistory: "3",
-// 		Change: 275.43,
-// 		DateTransfer: "2021-12-16",
-// 		Note: "Freelance Work",
-// 	},
-// 	{
-// 		IdHistory: "4",
-// 		Change: 202.87,
-// 		DateTransfer: "2021-11-23",
-// 		Note: "Project Bonus",
-// 	},
-// 	{
-// 		IdHistory: "5",
-// 		Change: -80.0,
-// 		DateTransfer: "2022-02-01",
-// 		Note: "Utilities Bill",
-// 	},
-// 	{
-// 		IdHistory: "6",
-// 		Change: 150.75,
-// 		DateTransfer: "2022-02-03",
-// 		Note: "Stock Dividend",
-// 	},
-// 	{
-// 		IdHistory: "7",
-// 		Change: -45.5,
-// 		DateTransfer: "2022-02-05",
-// 		Note: "Dinner Out",
-// 	},
-// 	{
-// 		IdHistory: "8",
-// 		Change: 100.0,
-// 		DateTransfer: "2022-02-10",
-// 		Note: "Gift",
-// 	},
-// 	{
-// 		IdHistory: "9",
-// 		Change: 300.0,
-// 		DateTransfer: "2022-02-15",
-// 		Note: "Consulting Fee",
-// 	},
-// 	{
-// 		IdHistory: "10",
-// 		Change: -120.0,
-// 		DateTransfer: "2022-02-18",
-// 		Note: "Car Repair",
-// 	},
-// ];
-
 const HistoryUsers: React.FC = () => {
 	const [searchText, setSearchText] = useState<string>("");
 	const [selectedDate, setSelectedDate] = useState<string>("");
 	const [transactions, setTransactions] = useState<Transaction[]>();
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -90,6 +28,7 @@ const HistoryUsers: React.FC = () => {
 
 		fetchData();
 	}, []);
+
 	const handleSearch = (value: string) => {
 		setSearchText(value);
 	};
@@ -129,7 +68,7 @@ const HistoryUsers: React.FC = () => {
 
 	const filteredTransactions = transactions?.filter((transaction) => {
 		const matchNote = transaction?.Note?.toLowerCase().includes(searchText?.toLowerCase());
-		const matchDate = selectedDate ? transaction.DateTransfer === selectedDate : true;
+		const matchDate = selectedDate ? moment(transaction.DateTransfer).isSame(moment(selectedDate), "day") : true;
 		return matchNote && matchDate;
 	});
 
