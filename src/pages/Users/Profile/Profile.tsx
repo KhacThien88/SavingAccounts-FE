@@ -1,25 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Button, Input } from "antd";
+import bcrypt from "bcryptjs";
 
 import Layout from "../Layout/Layout";
 
+import { ChangeProfileAPI, GetProfileAPI } from "@/components/CRUD/CRUD";
+
 const Profile: React.FC = () => {
-	const [fullName, setFullName] = useState("Feby Sabihul Hanafi");
-	const [email, setEmail] = useState("febysabihul@gmail.com");
-	const [birthDate, setBirthDate] = useState("1998-03-02");
-	const [phoneNumber, setPhoneNumber] = useState("6282233014136");
-	const [province, setProvince] = useState("Jawa Timur");
-	const [city, setCity] = useState("Banyuwangi");
-	const [address, setAddress] = useState(
-		"Dsn. Sumbersuko, RT/RW 01/01, Desa Kesilir, Kec. Siliragung Kab. Banyuwangi",
-	);
+	const [idUser, setIdUser] = useState("");
+	const [cccd, setCccd] = useState("");
+	const [fullName, setFullName] = useState("");
+	const [email, setEmail] = useState("");
+	const [birthDate, setBirthDate] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+	const [province, setProvince] = useState("");
+	const [city, setCity] = useState("");
+	const [accessFailedCount, setAccessFailedCount] = useState(0);
+	const [emailConfirmed, setEmailConfirmed] = useState(false);
+	const [phoneNumberConfirmed, setPhoneNumberConfirmed] = useState(false);
+	const [passwordHash, setPasswordHash] = useState("");
+	const [twoFactorEnable, setTwoFactorEnable] = useState(false);
+	const [securityStampHash, setSecurityStampHash] = useState("");
+	const [nation, setNation] = useState("");
+	const [lockoutEnable, setLockoutEnable] = useState(false);
+
+	const [originalProfile, setOriginalProfile] = useState<any>({});
 
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmNewPassword, setConfirmNewPassword] = useState("");
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+	// Fetch user profile data
+	useEffect(() => {
+		const fetchProfile = async () => {
+			try {
+				const response = await GetProfileAPI("1"); // Replace with actual user ID
+				const data = response.data;
+				setIdUser(data.IdUser);
+				setCccd(data.CCCD);
+				setFullName(data.FullName);
+				setEmail(data.Email);
+				setBirthDate(data.BirthDate);
+				setPhoneNumber(data.PhoneNumber);
+				setProvince(data.Province);
+				setCity(data.City);
+				setAccessFailedCount(data.AccessFailedCount);
+				setEmailConfirmed(data.EmailConfirmed);
+				setPhoneNumberConfirmed(data.PhoneNumberConfirmed);
+				setPasswordHash(data.PasswordHash);
+				setTwoFactorEnable(data.TwoFactorEnable);
+				setSecurityStampHash(data.SecurityStampHash);
+				setNation(data.Nation);
+				setLockoutEnable(data.LockoutEnable);
+
+				// Lưu trạng thái ban đầu
+				setOriginalProfile(data);
+			} catch (error) {
+				console.error("Error fetching profile data:", error);
+			}
+		};
+
+		fetchProfile();
+	}, []);
 
 	const handleToggleNewPasswordVisibility = () => {
 		setShowNewPassword(!showNewPassword);
@@ -30,21 +75,84 @@ const Profile: React.FC = () => {
 	};
 
 	const handleSaveChanges = () => {
-		// Handle save changes logic here
-		console.log({
-			fullName,
-			email,
-			birthDate,
-			phoneNumber,
-			province,
-			city,
-			address,
-			currentPassword,
-			newPassword,
-			confirmNewPassword,
-		});
+		const updatedProfile: Record<string, any> = {};
+
+		if (fullName !== originalProfile.FullName) updatedProfile["FullName"] = fullName;
+		if (email !== originalProfile.Email) updatedProfile["Email"] = email;
+		if (birthDate !== originalProfile.BirthDate) updatedProfile["BirthDate"] = birthDate;
+		if (phoneNumber !== originalProfile.PhoneNumber) updatedProfile["PhoneNumber"] = phoneNumber;
+		if (province !== originalProfile.Province) updatedProfile["Province"] = province;
+		if (city !== originalProfile.City) updatedProfile["City"] = city;
+		if (cccd !== originalProfile.CCCD) updatedProfile["CCCD"] = cccd;
+		if (accessFailedCount !== originalProfile.AccessFailedCount)
+			updatedProfile["AccessFailedCount"] = accessFailedCount;
+		if (emailConfirmed !== originalProfile.EmailConfirmed) updatedProfile["EmailConfirmed"] = emailConfirmed;
+		if (phoneNumberConfirmed !== originalProfile.PhoneNumberConfirmed)
+			updatedProfile["PhoneNumberConfirmed"] = phoneNumberConfirmed;
+		if (passwordHash !== originalProfile.PasswordHash) updatedProfile["PasswordHash"] = passwordHash;
+		if (twoFactorEnable !== originalProfile.TwoFactorEnable) updatedProfile["TwoFactorEnable"] = twoFactorEnable;
+		if (securityStampHash !== originalProfile.SecurityStampHash)
+			updatedProfile["SecurityStampHash"] = securityStampHash;
+		if (nation !== originalProfile.Nation) updatedProfile["Nation"] = nation;
+		if (lockoutEnable !== originalProfile.LockoutEnable) updatedProfile["LockoutEnable"] = lockoutEnable;
+
+		if (Object.keys(updatedProfile).length === 0) {
+			console.log("No changes detected.");
+			return;
+		}
+
+		// Convert to proper JSON format before sending
+		const payload = JSON.stringify(updatedProfile);
+
+		ChangeProfileAPI("1", payload)
+			.then((response) => {
+				console.log("Profile updated successfully:", response.data);
+				alert("Profile updated!");
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error("Error updating profile:", error.response ? error.response.data : error.message);
+			});
 	};
 
+	const handleChangePassword = async () => {
+		try {
+			// Hash the current password input by the user
+			const isPasswordMatch = await bcrypt.compare(currentPassword, passwordHash);
+
+			if (!isPasswordMatch) {
+				alert("The current password you entered is incorrect.");
+				return;
+			}
+
+			// If current password is correct, proceed to update the password
+			const salt = await bcrypt.genSalt(10);
+			const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+			const passwordChangeData = {
+				IdUser: idUser,
+				CurrentPassword: currentPassword,
+				NewPassword: newPasswordHash,
+			};
+
+			ChangeProfileAPI("1", passwordChangeData)
+				.then((response) => {
+					console.log("Profile updated successfully:", response.data);
+					alert("Password updated successfully!");
+					window.location.reload();
+				})
+				.catch((error) => {
+					console.error("Error updating password:", error.response ? error.response.data : error.message);
+				});
+		} catch (error) {
+			console.error("Error comparing passwords:", error);
+			alert("There was an error verifying your password. Please try again.");
+		}
+		if (newPassword !== confirmNewPassword) {
+			alert("New password and confirmation do not match.");
+			return;
+		}
+	};
 	return (
 		<Layout>
 			<div className="mx-auto max-w-7xl p-8">
@@ -54,7 +162,7 @@ const Profile: React.FC = () => {
 				</div>
 
 				<div className="flex gap-8">
-					{/* Phần chỉnh sửa thông tin hồ sơ */}
+					{/* Edit Profile Section */}
 					<div className="flex-1 rounded-md bg-white p-6 shadow-md">
 						<h2 className="mb-2 text-xl font-semibold text-gray-800">Edit Profile</h2>
 						<form className="space-y-4">
@@ -82,7 +190,7 @@ const Profile: React.FC = () => {
 									<label className="block font-medium text-gray-700">Birth Date</label>
 									<Input
 										type="date"
-										value={birthDate}
+										value={birthDate.split("T")[0]}
 										onChange={(e) => setBirthDate(e.target.value)}
 										className="rounded-lg"
 									/>
@@ -117,19 +225,17 @@ const Profile: React.FC = () => {
 									/>
 								</div>
 							</div>
-							<div>
-								<label className="block font-medium text-gray-700">Address</label>
-								<Input.TextArea
-									value={address}
-									onChange={(e) => setAddress(e.target.value)}
-									placeholder="Full Address"
-									className="rounded-lg"
-								/>
-							</div>
+							<Button
+								type="primary"
+								className="w-full bg-blue-500 hover:bg-blue-600"
+								onClick={handleSaveChanges}
+							>
+								Save Changes
+							</Button>
 						</form>
 					</div>
 
-					{/* Phần thay đổi mật khẩu */}
+					{/* Change Password Section */}
 					<div className="w-1/3 rounded-md bg-white p-6 shadow-md">
 						<h2 className="mb-2 text-xl font-semibold text-gray-800">Change Password</h2>
 						<form className="space-y-4">
@@ -181,9 +287,9 @@ const Profile: React.FC = () => {
 							<Button
 								type="primary"
 								className="w-full bg-yellow-500 hover:bg-yellow-600"
-								onClick={handleSaveChanges}
+								onClick={handleChangePassword}
 							>
-								Save Changes
+								Change Password
 							</Button>
 						</form>
 					</div>

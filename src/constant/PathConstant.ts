@@ -17,6 +17,7 @@ export default class PathConstant {
 
 	//User Page
 	static userProfile = "/user/Profile";
+	static userUpdateProfile = "/user/update-profile";
 	static userMonthReport = "/user/MonthReport";
 	static userWallet = "/user/Wallet";
 	static userHistory = "/user/History";
