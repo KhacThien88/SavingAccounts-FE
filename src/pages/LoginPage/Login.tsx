@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PathConstant from "constant/PathConstant";
 
+import { LoginAPI } from "@/components/CRUD/CRUD";
+
 const Login: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -12,10 +14,21 @@ const Login: React.FC = () => {
 		setShowPassword(!showPassword);
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Handle login logic here
-		console.log({ email, password });
+		try {
+			const response = await LoginAPI(email, password);
+			// Nhận token JWT từ response
+			const token = response.data;
+			// Lưu token vào localStorage để sử dụng cho các yêu cầu tiếp theo
+			localStorage.setItem("token", token);
+
+			// Chuyển hướng người dùng sau khi đăng nhập thành công
+			navigate(PathConstant.userWallet); // Chuyển đến trang chính sau khi đăng nhập thành công
+		} catch (error) {
+			console.error("Đăng nhập thất bại", error);
+			alert("Login failed, please check your credentials.");
+		}
 	};
 
 	const goToForgotPassword = (e: React.MouseEvent) => {
@@ -117,7 +130,7 @@ const Login: React.FC = () => {
 					Another Method
 				</button>
 				<div className="text-center">
-					<span className="text-sm text-gray-500">You dont Have an Account? </span>
+					<span className="text-sm text-gray-500">You dont have an account? </span>
 					<a
 						onClick={goToSignUp}
 						className="cursor-pointer text-sm font-medium text-yellow-500 hover:text-yellow-700"

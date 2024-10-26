@@ -4,10 +4,12 @@ export default class PathConstant {
 	static loginPage = "/login";
 	static forgotPasswordPage = "/forgot-password";
 	static signUpPage = "/signup";
-
+	//Authentication
+	static loginAuthentication = "/Account/SignIn";
+	//Signup
+	static signUpAuthentication = "/Account/SignUp";
 	//Reset Password
 	static resetPasswordPage = "/reset-password";
-
 	//Admin Page
 	static adminDashboard = "/admin/Dashboard";
 	static adminDashboardPageManagerUser = "/admin/ManageUsers";

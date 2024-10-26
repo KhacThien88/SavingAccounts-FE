@@ -21,3 +21,21 @@ export const ChangeProfileAPI = (userId: string, updatedProfile: any) => {
 		},
 	});
 };
+export const LoginAPI = (email: string, password: string) => {
+	return axiosUtils.post(
+		`${PathConstant.loginAuthentication}`,
+		{ email, password },
+		{
+			headers: {
+				"Content-Type": "application/json",
+			},
+		},
+	);
+};
+export const SignUpAPI = (signUpData: any) => {
+	return axiosUtils.post(`${PathConstant.signUpAuthentication}`, signUpData, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

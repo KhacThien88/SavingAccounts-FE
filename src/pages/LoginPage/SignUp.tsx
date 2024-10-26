@@ -1,34 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import PathConstant from "constant/PathConstant";
 
+import { SignUpAPI } from "@/components/CRUD/CRUD";
+
 const SignUp: React.FC = () => {
-	const [fullName, setFullName] = useState("");
-	const [email, setEmail] = useState("");
-	const [birthDate, setBirthDate] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [province, setProvince] = useState("");
-	const [city, setCity] = useState("");
-	const [fullAddress, setFullAddress] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	const [FullName, setFullName] = useState("");
+	const [Email, setEmail] = useState("");
+	const [BirthDate, setBirthDate] = useState("");
+	const [PhoneNumber, setPhoneNumber] = useState("");
+	const [Province, setProvince] = useState("");
+	const [City, setCity] = useState("");
+	const [Nation, setNation] = useState("");
+	const [Address, setAddress] = useState("");
+	const [Password, setPassword] = useState("");
+	const [ConfirmPassword, setConfirmPassword] = useState("");
 
 	const navigate = useNavigate();
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Handle sign up logic here
-		console.log({
-			fullName,
-			email,
-			birthDate,
-			phoneNumber,
-			province,
-			city,
-			fullAddress,
-			password,
-			confirmPassword,
-		});
+
+		const signUpData = {
+			FullName,
+			Email,
+			BirthDate,
+			PhoneNumber,
+			Province,
+			City,
+			Nation,
+			Address,
+			Password,
+			ConfirmPassword,
+		};
+
+		try {
+			const response = await SignUpAPI(signUpData);
+			console.log("SignUp Successful:", response.data);
+			navigate(PathConstant.loginPage);
+		} catch (error) {
+			console.error("Error during signup:", error);
+		}
 	};
 
 	const goToSignIn = (e: React.MouseEvent) => {
@@ -52,7 +65,7 @@ const SignUp: React.FC = () => {
 							type="text"
 							id="fullName"
 							placeholder="Email or username"
-							value={fullName}
+							value={FullName}
 							onChange={(e) => setFullName(e.target.value)}
 							className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
@@ -68,7 +81,7 @@ const SignUp: React.FC = () => {
 							type="email"
 							id="email"
 							placeholder="Email Address"
-							value={email}
+							value={Email}
 							onChange={(e) => setEmail(e.target.value)}
 							className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
@@ -84,7 +97,7 @@ const SignUp: React.FC = () => {
 							<input
 								type="date"
 								id="birthDate"
-								value={birthDate}
+								value={BirthDate}
 								onChange={(e) => setBirthDate(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
@@ -100,7 +113,7 @@ const SignUp: React.FC = () => {
 								type="text"
 								id="phoneNumber"
 								placeholder="Phone Number"
-								value={phoneNumber}
+								value={PhoneNumber}
 								onChange={(e) => setPhoneNumber(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
@@ -118,7 +131,7 @@ const SignUp: React.FC = () => {
 								type="text"
 								id="province"
 								placeholder="Province"
-								value={province}
+								value={Province}
 								onChange={(e) => setProvince(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
@@ -134,7 +147,7 @@ const SignUp: React.FC = () => {
 								type="text"
 								id="city"
 								placeholder="City"
-								value={city}
+								value={City}
 								onChange={(e) => setCity(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
@@ -150,8 +163,23 @@ const SignUp: React.FC = () => {
 						<textarea
 							id="fullAddress"
 							placeholder="Full Address"
-							value={fullAddress}
-							onChange={(e) => setFullAddress(e.target.value)}
+							value={Address}
+							onChange={(e) => setAddress(e.target.value)}
+							className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							htmlFor="fullAddress"
+							className="block font-medium text-gray-700"
+						>
+							Nation
+						</label>
+						<textarea
+							id="nation"
+							placeholder="Nation"
+							value={Nation}
+							onChange={(e) => setNation(e.target.value)}
 							className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
@@ -167,7 +195,7 @@ const SignUp: React.FC = () => {
 								type="password"
 								id="password"
 								placeholder="Password"
-								value={password}
+								value={Password}
 								onChange={(e) => setPassword(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
@@ -183,7 +211,7 @@ const SignUp: React.FC = () => {
 								type="password"
 								id="confirmPassword"
 								placeholder="Confirm Password"
-								value={confirmPassword}
+								value={ConfirmPassword}
 								onChange={(e) => setConfirmPassword(e.target.value)}
 								className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>

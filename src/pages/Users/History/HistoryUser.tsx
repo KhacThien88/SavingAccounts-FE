@@ -3,6 +3,7 @@ import { FiBell } from "react-icons/fi";
 import { DatePicker, Input, Space, Table, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import moment from "moment";
+import { GetUserId } from "utils/GetIdUser";
 
 import Layout from "../Layout/Layout";
 
@@ -14,11 +15,10 @@ const HistoryUsers: React.FC = () => {
 	const [searchText, setSearchText] = useState<string>("");
 	const [selectedDate, setSelectedDate] = useState<string>("");
 	const [transactions, setTransactions] = useState<Transaction[]>();
-
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await GetHistoryAPI("1");
+				const response = await GetHistoryAPI(GetUserId());
 				console.log(response.data);
 				setTransactions(response.data);
 			} catch (error) {

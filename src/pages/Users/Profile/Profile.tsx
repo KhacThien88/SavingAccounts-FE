@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Button, Input } from "antd";
 import bcrypt from "bcryptjs";
+import { GetUserId } from "utils/GetIdUser";
 
 import Layout from "../Layout/Layout";
 
@@ -9,21 +10,14 @@ import { ChangeProfileAPI, GetProfileAPI } from "@/components/CRUD/CRUD";
 
 const Profile: React.FC = () => {
 	const [idUser, setIdUser] = useState("");
-	const [cccd, setCccd] = useState("");
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [birthDate, setBirthDate] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
 	const [province, setProvince] = useState("");
 	const [city, setCity] = useState("");
-	const [accessFailedCount, setAccessFailedCount] = useState(0);
-	const [emailConfirmed, setEmailConfirmed] = useState(false);
-	const [phoneNumberConfirmed, setPhoneNumberConfirmed] = useState(false);
 	const [passwordHash, setPasswordHash] = useState("");
-	const [twoFactorEnable, setTwoFactorEnable] = useState(false);
 	const [securityStampHash, setSecurityStampHash] = useState("");
 	const [nation, setNation] = useState("");
-	const [lockoutEnable, setLockoutEnable] = useState(false);
 
 	const [originalProfile, setOriginalProfile] = useState<any>({});
 
@@ -37,24 +31,17 @@ const Profile: React.FC = () => {
 	useEffect(() => {
 		const fetchProfile = async () => {
 			try {
-				const response = await GetProfileAPI("1"); // Replace with actual user ID
+				const response = await GetProfileAPI(GetUserId());
 				const data = response.data;
 				setIdUser(data.IdUser);
-				setCccd(data.CCCD);
 				setFullName(data.FullName);
 				setEmail(data.Email);
 				setBirthDate(data.BirthDate);
-				setPhoneNumber(data.PhoneNumber);
 				setProvince(data.Province);
 				setCity(data.City);
-				setAccessFailedCount(data.AccessFailedCount);
-				setEmailConfirmed(data.EmailConfirmed);
-				setPhoneNumberConfirmed(data.PhoneNumberConfirmed);
 				setPasswordHash(data.PasswordHash);
-				setTwoFactorEnable(data.TwoFactorEnable);
 				setSecurityStampHash(data.SecurityStampHash);
 				setNation(data.Nation);
-				setLockoutEnable(data.LockoutEnable);
 
 				// Lưu trạng thái ban đầu
 				setOriginalProfile(data);
@@ -80,21 +67,13 @@ const Profile: React.FC = () => {
 		if (fullName !== originalProfile.FullName) updatedProfile["FullName"] = fullName;
 		if (email !== originalProfile.Email) updatedProfile["Email"] = email;
 		if (birthDate !== originalProfile.BirthDate) updatedProfile["BirthDate"] = birthDate;
-		if (phoneNumber !== originalProfile.PhoneNumber) updatedProfile["PhoneNumber"] = phoneNumber;
 		if (province !== originalProfile.Province) updatedProfile["Province"] = province;
 		if (city !== originalProfile.City) updatedProfile["City"] = city;
-		if (cccd !== originalProfile.CCCD) updatedProfile["CCCD"] = cccd;
-		if (accessFailedCount !== originalProfile.AccessFailedCount)
-			updatedProfile["AccessFailedCount"] = accessFailedCount;
-		if (emailConfirmed !== originalProfile.EmailConfirmed) updatedProfile["EmailConfirmed"] = emailConfirmed;
-		if (phoneNumberConfirmed !== originalProfile.PhoneNumberConfirmed)
-			updatedProfile["PhoneNumberConfirmed"] = phoneNumberConfirmed;
+
 		if (passwordHash !== originalProfile.PasswordHash) updatedProfile["PasswordHash"] = passwordHash;
-		if (twoFactorEnable !== originalProfile.TwoFactorEnable) updatedProfile["TwoFactorEnable"] = twoFactorEnable;
 		if (securityStampHash !== originalProfile.SecurityStampHash)
 			updatedProfile["SecurityStampHash"] = securityStampHash;
 		if (nation !== originalProfile.Nation) updatedProfile["Nation"] = nation;
-		if (lockoutEnable !== originalProfile.LockoutEnable) updatedProfile["LockoutEnable"] = lockoutEnable;
 
 		if (Object.keys(updatedProfile).length === 0) {
 			console.log("No changes detected.");
@@ -104,7 +83,7 @@ const Profile: React.FC = () => {
 		// Convert to proper JSON format before sending
 		const payload = JSON.stringify(updatedProfile);
 
-		ChangeProfileAPI("1", payload)
+		ChangeProfileAPI(GetUserId(), payload)
 			.then((response) => {
 				console.log("Profile updated successfully:", response.data);
 				alert("Profile updated!");
@@ -117,15 +96,12 @@ const Profile: React.FC = () => {
 
 	const handleChangePassword = async () => {
 		try {
-			// Hash the current password input by the user
 			const isPasswordMatch = await bcrypt.compare(currentPassword, passwordHash);
 
 			if (!isPasswordMatch) {
 				alert("The current password you entered is incorrect.");
 				return;
 			}
-
-			// If current password is correct, proceed to update the password
 			const salt = await bcrypt.genSalt(10);
 			const newPasswordHash = await bcrypt.hash(newPassword, salt);
 
@@ -135,7 +111,7 @@ const Profile: React.FC = () => {
 				NewPassword: newPasswordHash,
 			};
 
-			ChangeProfileAPI("1", passwordChangeData)
+			ChangeProfileAPI(GetUserId(), passwordChangeData)
 				.then((response) => {
 					console.log("Profile updated successfully:", response.data);
 					alert("Password updated successfully!");
@@ -192,15 +168,6 @@ const Profile: React.FC = () => {
 										type="date"
 										value={birthDate.split("T")[0]}
 										onChange={(e) => setBirthDate(e.target.value)}
-										className="rounded-lg"
-									/>
-								</div>
-								<div className="flex-1">
-									<label className="block font-medium text-gray-700">Phone Number</label>
-									<Input
-										value={phoneNumber}
-										onChange={(e) => setPhoneNumber(e.target.value)}
-										placeholder="Phone Number"
 										className="rounded-lg"
 									/>
 								</div>
