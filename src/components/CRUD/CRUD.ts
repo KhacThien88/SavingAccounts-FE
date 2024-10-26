@@ -39,3 +39,10 @@ export const SignUpAPI = (signUpData: any) => {
 		},
 	});
 };
+export const ChangePassword = (changePasswordData: any) => {
+	return axiosUtils.post(`${PathConstant.verifyPasswordAuthentication}`, changePasswordData, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

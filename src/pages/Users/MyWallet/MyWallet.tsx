@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { Button, Input, Select } from "antd";
+import { GetUserId } from "utils/GetIdUser";
 
 import Layout from "../Layout/Layout";
 
@@ -16,7 +17,7 @@ const MyWallet: React.FC = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await GetListCardAPI("1");
+				const response = await GetListCardAPI(GetUserId());
 				console.log(response.data);
 				setListCard(response.data);
 			} catch (error) {

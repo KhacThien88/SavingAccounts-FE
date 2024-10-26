@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Button, Input } from "antd";
-import bcrypt from "bcryptjs";
 import { GetUserId } from "utils/GetIdUser";
 
 import Layout from "../Layout/Layout";
 
-import { ChangeProfileAPI, GetProfileAPI } from "@/components/CRUD/CRUD";
+import { ChangePassword, ChangeProfileAPI, GetProfileAPI } from "@/components/CRUD/CRUD";
 
 const Profile: React.FC = () => {
 	const [idUser, setIdUser] = useState("");
@@ -33,7 +32,7 @@ const Profile: React.FC = () => {
 			try {
 				const response = await GetProfileAPI(GetUserId());
 				const data = response.data;
-				setIdUser(data.IdUser);
+				setIdUser(GetUserId());
 				setFullName(data.FullName);
 				setEmail(data.Email);
 				setBirthDate(data.BirthDate);
@@ -96,28 +95,20 @@ const Profile: React.FC = () => {
 
 	const handleChangePassword = async () => {
 		try {
-			const isPasswordMatch = await bcrypt.compare(currentPassword, passwordHash);
-
-			if (!isPasswordMatch) {
-				alert("The current password you entered is incorrect.");
-				return;
-			}
-			const salt = await bcrypt.genSalt(10);
-			const newPasswordHash = await bcrypt.hash(newPassword, salt);
-
 			const passwordChangeData = {
 				IdUser: idUser,
-				CurrentPassword: currentPassword,
-				NewPassword: newPasswordHash,
+				PasswordHash: currentPassword,
+				newPassword: newPassword,
 			};
 
-			ChangeProfileAPI(GetUserId(), passwordChangeData)
+			ChangePassword(passwordChangeData)
 				.then((response) => {
 					console.log("Profile updated successfully:", response.data);
 					alert("Password updated successfully!");
 					window.location.reload();
 				})
 				.catch((error) => {
+					alert("Current password false!");
 					console.error("Error updating password:", error.response ? error.response.data : error.message);
 				});
 		} catch (error) {
