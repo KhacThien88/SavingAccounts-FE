@@ -74,15 +74,15 @@ const Sidebar: React.FC = () => {
 					</li>
 					<li>
 						<button
-							onClick={() => handleNavigation(PathConstant.adminDashboardInbox)}
+							onClick={() => handleNavigation(PathConstant.adminDashboardAddCardUser)}
 							className={`flex w-full items-center px-4 py-2 ${
-								isActive(PathConstant.adminDashboardInbox)
+								isActive(PathConstant.adminDashboardAddCardUser)
 									? "bg-gray-200 text-blue-600"
 									: "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
 							}`}
 						>
 							<span className="material-icons-outlined">inbox</span>
-							<span className="ml-3">Inbox</span>
+							<span className="ml-3">Add Card User</span>
 						</button>
 					</li>
 					<li>

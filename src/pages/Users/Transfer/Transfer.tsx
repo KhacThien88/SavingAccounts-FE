@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { Button, Input, Radio } from "antd";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 interface PaymentMethod {
 	key: string;

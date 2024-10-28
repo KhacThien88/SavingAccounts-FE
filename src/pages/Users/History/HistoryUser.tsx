@@ -3,9 +3,9 @@ import { FiBell } from "react-icons/fi";
 import { DatePicker, Input, Space, Table, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import moment from "moment";
-import { GetUserId } from "utils/GetIdUser";
+import { GetUserId } from "utils/UserUtil";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 import { Transaction } from "./HistoryUser.type";
 

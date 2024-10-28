@@ -2,14 +2,16 @@ import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import PathConstant from "constant/PathConstant";
 
+import AddCardUser from "@/pages/Admin/AdminAddCardUser/AdminAddCardUser";
 import HistoryTransfer from "@/pages/Admin/History/History";
 import ManageUsers from "@/pages/Admin/ManagerUser/ManagerUser";
 import TransferUsers from "@/pages/Admin/TransferUsers/TransferUsers";
 import ForgotPassword from "@/pages/LoginPage/ForgotPassword";
 import Login from "@/pages/LoginPage/Login";
-import SignUp from "@/pages/LoginPage/SignUp";
+import Logout from "@/pages/LogoutPage/Logout";
 import NotFound from "@/pages/NotFoundPage/NotFoundPage";
 import ResetPassword from "@/pages/ResetPasswordPage/ResetPassword";
+import SignUp from "@/pages/SignUp/SignUp";
 import HistoryUsers from "@/pages/Users/History/HistoryUser";
 import ListSavingAccounts from "@/pages/Users/ListSavingAccount/ListSavingAccounts";
 import MonthReport from "@/pages/Users/MonthReport/MonthReport";
@@ -57,6 +59,10 @@ const useRouter = () => {
 			element: <HistoryTransfer />,
 		},
 		{
+			path: PathConstant.adminDashboardAddCardUser,
+			element: <AddCardUser />,
+		},
+		{
 			path: PathConstant.signUpPage,
 			element: <SignUp />,
 		},
@@ -80,10 +86,10 @@ const useRouter = () => {
 			path: PathConstant.userListSavingAccounts,
 			element: <ListSavingAccounts />,
 		},
-		// {
-		// 	path: PathConstant.userHelp,
-		// 	element: <HelpUser />,
-		// },
+		{
+			path: PathConstant.logout,
+			element: <Logout />,
+		},
 		{
 			path: PathConstant.userMonthReport,
 			element: <MonthReport />,

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PathConstant from "constant/PathConstant";
+import { GetRoleUser } from "utils/UserUtil";
 
 import { LoginAPI } from "@/components/CRUD/CRUD";
 
@@ -18,13 +19,19 @@ const Login: React.FC = () => {
 		e.preventDefault();
 		try {
 			const response = await LoginAPI(email, password);
-			// Nhận token JWT từ response
 			const token = response.data;
-			// Lưu token vào localStorage để sử dụng cho các yêu cầu tiếp theo
-			localStorage.setItem("token", token);
 
-			// Chuyển hướng người dùng sau khi đăng nhập thành công
-			navigate(PathConstant.userWallet); // Chuyển đến trang chính sau khi đăng nhập thành công
+			if (token) {
+				localStorage.setItem("token", token);
+				const role = GetRoleUser();
+				if (role === "Admin") {
+					await navigate(PathConstant.adminDashboardHistory);
+				} else {
+					await navigate(PathConstant.userWallet);
+				}
+			} else {
+				throw new Error("Token not provided");
+			}
 		} catch (error) {
 			console.error("Đăng nhập thất bại", error);
 			alert("Login failed, please check your credentials.");

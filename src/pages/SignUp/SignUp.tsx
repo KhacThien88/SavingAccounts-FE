@@ -37,7 +37,7 @@ const SignUp: React.FC = () => {
 
 		try {
 			const response = await SignUpAPI(signUpData);
-			console.log("SignUp Successful:", response.data);
+			alert("SignUp Successful:");
 			navigate(PathConstant.loginPage);
 		} catch (error) {
 			console.error("Error during signup:", error);

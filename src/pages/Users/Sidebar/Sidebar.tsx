@@ -132,7 +132,7 @@ const Sidebar: React.FC = () => {
 			</nav>
 			<div className="mt-auto p-4">
 				<button
-					onClick={() => handleNavigation("/logout")}
+					onClick={() => handleNavigation(PathConstant.logout)}
 					className="flex w-full items-center py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
 				>
 					<span className="material-icons-outlined">logout</span>

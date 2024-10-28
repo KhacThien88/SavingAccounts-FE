@@ -1,12 +1,11 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 import Sidebar from "../Sidebar/Sidebar";
 
-interface LayoutProps {
-	children: React.ReactNode;
-}
+import { LayoutProps } from "./AdminLayout.type";
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const AdminLayout: React.FC<LayoutProps> = ({ children }) => {
 	return (
 		<div className="flex">
 			<Sidebar />
@@ -15,4 +14,4 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 	);
 };
 
-export default Layout;
+export default AdminLayout;

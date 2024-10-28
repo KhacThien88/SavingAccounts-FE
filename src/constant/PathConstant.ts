@@ -16,7 +16,7 @@ export default class PathConstant {
 	static adminDashboardPageManagerUser = "/admin/ManageUsers";
 	static adminDashboardPageTransferUser = "/admin/TransferUsers";
 	static adminDashboardHistory = "/admin/History";
-	static adminDashboardInbox = "/admin/Inbox";
+	static adminDashboardAddCardUser = "/admin/AddCardUser";
 
 	//User Page
 	static userProfile = "/user/Profile";
@@ -28,4 +28,6 @@ export default class PathConstant {
 	static userListSavingAccounts = "/user/ListSavingAccounts";
 	static userHelp = "/user/Help";
 	static userSettings = "/user/Settings";
+	//Logout page
+	static logout = "/logout";
 }

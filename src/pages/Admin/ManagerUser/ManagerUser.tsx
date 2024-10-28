@@ -3,7 +3,7 @@ import { FiBell } from "react-icons/fi";
 import { Input, Table } from "antd";
 import { ColumnType } from "antd/es/table";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/AdminLayout";
 
 interface User {
 	key: string;

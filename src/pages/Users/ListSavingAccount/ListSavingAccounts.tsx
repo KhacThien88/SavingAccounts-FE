@@ -3,7 +3,7 @@ import { DatePicker, Input, Space, Table, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import moment from "moment";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 import { SavingAccount } from "./ListSavingAccount.type";
 

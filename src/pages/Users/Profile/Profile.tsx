@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Button, Input } from "antd";
-import { GetUserId } from "utils/GetIdUser";
+import { GetUserId } from "utils/UserUtil";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 import { ChangePassword, ChangeProfileAPI, GetProfileAPI } from "@/components/CRUD/CRUD";
 
@@ -41,8 +41,6 @@ const Profile: React.FC = () => {
 				setPasswordHash(data.PasswordHash);
 				setSecurityStampHash(data.SecurityStampHash);
 				setNation(data.Nation);
-
-				// Lưu trạng thái ban đầu
 				setOriginalProfile(data);
 			} catch (error) {
 				console.error("Error fetching profile data:", error);

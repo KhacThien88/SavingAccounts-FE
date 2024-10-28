@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { Button, Input, Select } from "antd";
-import { GetUserId } from "utils/GetIdUser";
+import { GetUserId } from "utils/UserUtil";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 import { Card } from "./MyWallet.type";
 
@@ -13,6 +13,7 @@ const { Option } = Select;
 
 const MyWallet: React.FC = () => {
 	const [ListCard, setListCard] = useState<Card[]>([]);
+	const [showPassword, setShowPassword] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -24,12 +25,14 @@ const MyWallet: React.FC = () => {
 				console.error("Error fetching data:", error);
 			}
 		};
-
 		fetchData();
 	}, []);
 
-	// Array of background colors for cards
 	const cardColors = ["bg-blue-600", "bg-yellow-400", "bg-green-500", "bg-red-500"];
+
+	const togglePasswordVisibility = () => {
+		setShowPassword((prev) => !prev);
+	};
 
 	return (
 		<Layout>
@@ -93,8 +96,14 @@ const MyWallet: React.FC = () => {
 								placeholder="Select Card Name"
 								className="mt-1 w-full"
 							>
-								<Option value="bank1">Card 1</Option>
-								<Option value="bank2">Card 2</Option>
+								{ListCard.map((card, index) => (
+									<Option
+										key={card.IdCard}
+										value={card.IdCard}
+									>
+										{`Card ${index + 1} - ${card.CardNumber.slice(-4)}`}
+									</Option>
+								))}
 							</Select>
 						</div>
 						<div className="col-span-2">
@@ -112,19 +121,23 @@ const MyWallet: React.FC = () => {
 							/>
 						</div>
 						<div>
-							<label className="block text-sm font-medium text-gray-700">Swift Code</label>
-							<Input
-								placeholder="Swift Code"
-								className="mt-1"
-							/>
+							<label className="block text-sm font-medium text-gray-700">Password</label>
+							<div className="relative">
+								<Input
+									placeholder="Password"
+									type={showPassword ? "text" : "password"}
+									className="mt-1 w-full pr-10"
+								/>
+								<button
+									type="button"
+									onClick={togglePasswordVisibility}
+									className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
+								>
+									{showPassword ? "Hide" : "Show"}
+								</button>
+							</div>
 						</div>
-						<div className="col-span-2">
-							<label className="block text-sm font-medium text-gray-700">Branch *</label>
-							<Input
-								placeholder="Branch"
-								className="mt-1"
-							/>
-						</div>
+
 						<div className="col-span-2">
 							<label className="block text-sm font-medium text-gray-700">Saving Account Name *</label>
 							<Input

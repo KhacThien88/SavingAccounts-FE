@@ -46,3 +46,10 @@ export const ChangePassword = (changePasswordData: any) => {
 		},
 	});
 };
+export const AddCardUser = (CardInformation: any) => {
+	return axiosUtils.post(`${PathConstant.adminDashboardAddCardUser}`, CardInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
