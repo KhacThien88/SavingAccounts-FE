@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DatePicker, Input, Space, Table, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import moment from "moment";
+import { GetUserId } from "utils/UserUtil";
 
 import Layout from "../Layout/UserLayout";
 
@@ -64,7 +65,7 @@ const ListSavingAccounts: React.FC = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await GetListSavingAccountsAPI("1");
+				const response = await GetListSavingAccountsAPI(GetUserId());
 				setSavingAccounts(response.data);
 			} catch (error) {
 				console.error("Error fetching data:", error);
