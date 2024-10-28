@@ -53,3 +53,10 @@ export const AddCardUser = (CardInformation: any) => {
 		},
 	});
 };
+export const AddSavingAccount = (SavingAccountInformation: any) => {
+	return axiosUtils.post(`${PathConstant.userOpeningSavingAccount}`, SavingAccountInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

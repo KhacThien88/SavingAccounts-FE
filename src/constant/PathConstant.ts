@@ -28,6 +28,8 @@ export default class PathConstant {
 	static userListSavingAccounts = "/user/ListSavingAccounts";
 	static userHelp = "/user/Help";
 	static userSettings = "/user/Settings";
+	static userOpeningSavingAccount = "/user/opening-SavingAccount";
+
 	//Logout page
 	static logout = "/logout";
 }
