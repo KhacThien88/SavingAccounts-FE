@@ -7,7 +7,9 @@ export const GetUserId = () => {
 	if (!token) {
 		throw new Error("User not authenticated");
 	}
+
 	const decodedToken = jwtDecode<DecodedToken>(token);
+	console.log(decodedToken);
 	return decodedToken["sub"];
 };
 

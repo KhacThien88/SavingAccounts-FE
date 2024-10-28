@@ -204,7 +204,7 @@ const ManageUsersPage: React.FC = () => {
 					<Table
 						columns={columns}
 						dataSource={filteredData}
-						pagination={{ pageSize: 10 }}
+						pagination={{ pageSize: 5 }}
 					/>
 				</div>
 			</div>
