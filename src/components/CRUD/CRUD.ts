@@ -67,3 +67,10 @@ export const depositsSavingAccount = (SavingAccountInformation: any) => {
 		},
 	});
 };
+export const withdrawsSavingAccount = (SavingAccountInformation: any) => {
+	return axiosUtils.post(`${PathConstant.userWithdrawsSavingAccount}`, SavingAccountInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

@@ -4,20 +4,18 @@ import { GetUserId } from "utils/UserUtil";
 
 import UserLayout from "../Layout/UserLayout";
 
-import { depositsSavingAccount, GetListCardAPI, GetListSavingAccountsAPI } from "@/components/CRUD/CRUD";
+import { GetListSavingAccountsAPI, withdrawsSavingAccount } from "@/components/CRUD/CRUD";
 
 const { Option } = Select;
 
-const DepositsSavingAccount = () => {
-	const [ListCard, setListCard] = useState([]);
+const WithdrawsSavingAccount = () => {
 	const [ListSavingAccount, setListSavingAccount] = useState([]);
 	const [showPassword, setShowPassword] = useState(false);
 	const [savingAccountData, setSavingAccountData] = useState({
 		idSavingAccount: "",
 		savingAccountName: "",
-		cardName: "",
-		cardNumber: "",
-		cardBalance: "",
+		balance: "", // Store current balance
+		term: "", // Add term field
 		amount: "",
 		password: "",
 	});
@@ -25,15 +23,6 @@ const DepositsSavingAccount = () => {
 	const [error, setError] = useState("");
 
 	useEffect(() => {
-		const fetchListCard = async () => {
-			try {
-				const response = await GetListCardAPI(GetUserId());
-				setListCard(response.data);
-			} catch (error) {
-				console.error("Error fetching card list:", error);
-				message.error("Failed to load card list.");
-			}
-		};
 		const fetchListSavingAccount = async () => {
 			try {
 				const response = await GetListSavingAccountsAPI(GetUserId());
@@ -43,7 +32,6 @@ const DepositsSavingAccount = () => {
 				message.error("Failed to load saving accounts.");
 			}
 		};
-		fetchListCard();
 		fetchListSavingAccount();
 	}, []);
 
@@ -51,29 +39,19 @@ const DepositsSavingAccount = () => {
 		setSavingAccountData((prevData) => ({ ...prevData, [field]: value }));
 	};
 
-	const handleCardSelection = (selectedCardId: any) => {
-		const selectedCard: any = ListCard.find((card: any) => card.IdCard === selectedCardId);
-		if (selectedCard) {
-			setSavingAccountData((prevData) => ({
-				...prevData,
-				cardName: selectedCard.NameOfCard,
-				cardNumber: selectedCard.CardNumber,
-				cardBalance: selectedCard.Balance, // Set card balance here
-				idSavingAccount: selectedCard.IdCard,
-			}));
-		}
-	};
-
 	const handleSavingAccountSelection = (selectedSavingAccountId: any) => {
 		const selectedAccount: any = ListSavingAccount.find(
 			(account: any) => account.IdSavingAccount === selectedSavingAccountId,
 		);
 		if (selectedAccount) {
-			setSavingAccountData((prevData) => ({
-				...prevData,
+			setSavingAccountData({
 				idSavingAccount: selectedAccount.IdSavingAccount,
 				savingAccountName: selectedAccount.NameOfSavingAccount,
-			}));
+				balance: selectedAccount.Balance,
+				term: selectedAccount.Term, // Set the term of the selected account
+				amount: selectedAccount.Term === "No limited" ? "" : selectedAccount.Balance, // Set amount based on term
+				password: "",
+			});
 		}
 	};
 
@@ -81,7 +59,15 @@ const DepositsSavingAccount = () => {
 		setShowPassword(!showPassword);
 	};
 
-	const handleAddSavingAccount = async () => {
+	const handleAmountChange = (value: any) => {
+		if (savingAccountData.term === "No limited" && value <= savingAccountData.balance) {
+			handleInputChange("amount", value);
+		} else if (savingAccountData.term !== "No limited") {
+			handleInputChange("amount", savingAccountData.balance); // If term is restricted, set full balance
+		}
+	};
+
+	const handleWithdrawSavingAccount = async () => {
 		if (!savingAccountData.idSavingAccount || !savingAccountData.amount || !savingAccountData.password) {
 			setError("Please fill in all required fields.");
 			return;
@@ -91,37 +77,36 @@ const DepositsSavingAccount = () => {
 		const savingAccountInformation = {
 			IdUser: GetUserId(),
 			NameOfSavingAccount: savingAccountData.savingAccountName,
-			IdCard: savingAccountData.idSavingAccount,
+			IdSavingAccount: savingAccountData.idSavingAccount,
 			Amount: parseFloat(savingAccountData.amount),
 			password: savingAccountData.password,
 		};
 
 		try {
-			// Call the depositsSavingAccount API function
-			await depositsSavingAccount(savingAccountInformation);
-			setSuccessMessage("Saving account deposit successful!");
+			// Call the withdrawsSavingAccount API function
+			await withdrawsSavingAccount(savingAccountInformation);
+			setSuccessMessage("Saving account withdrawal successful!");
 			setError("");
 
 			// Clear the form
 			setSavingAccountData({
 				idSavingAccount: "",
 				savingAccountName: "",
-				cardName: "",
-				cardNumber: "",
-				cardBalance: "",
+				balance: "",
+				term: "",
 				amount: "",
 				password: "",
 			});
 		} catch (error) {
-			console.error("Error depositing to saving account:", error);
-			setError("Failed to deposit to saving account. Please try again.");
+			console.error("Error withdrawing from saving account:", error);
+			setError("Failed to withdraw from saving account. Please try again.");
 		}
 	};
 
 	return (
 		<UserLayout>
 			<div className="rounded-md bg-white p-6 shadow-md">
-				<h2 className="mb-4 text-xl font-semibold text-gray-800">Deposit to Saving Account</h2>
+				<h2 className="mb-4 text-xl font-semibold text-gray-800">Withdraw from Saving Account</h2>
 				<div className="grid grid-cols-2 gap-4">
 					{/* Saving Account Selection */}
 					<div className="col-span-2">
@@ -152,45 +137,35 @@ const DepositsSavingAccount = () => {
 						/>
 					</div>
 
-					{/* Card Selection */}
+					{/* Current Balance */}
 					<div className="col-span-2">
-						<label className="block text-sm font-medium text-gray-700">Card Name *</label>
-						<Select
-							placeholder="Select Card Name"
-							className="mt-1 w-full"
-							onChange={handleCardSelection}
-						>
-							{ListCard.map((card: any, index) => (
-								<Option
-									key={card.IdCard}
-									value={card.IdCard}
-								>
-									{`Card ${index + 1} - ${card.CardNumber.slice(-4)}`}
-								</Option>
-							))}
-						</Select>
-					</div>
-
-					{/* Amount of Card (Balance) */}
-					<div className="col-span-2">
-						<label className="block text-sm font-medium text-gray-700">
-							Amount of Card (Current Balance)
-						</label>
+						<label className="block text-sm font-medium text-gray-700">Current Balance</label>
 						<Input
-							value={savingAccountData.cardBalance}
+							value={savingAccountData.balance}
 							disabled
 							className="mt-1 w-full bg-gray-100" // Gray background to indicate readonly
 						/>
 					</div>
 
-					{/* Amount to Deposit */}
+					{/* Term */}
+					<div className="col-span-2">
+						<label className="block text-sm font-medium text-gray-700">Term</label>
+						<Input
+							value={savingAccountData.term}
+							disabled
+							className="mt-1 w-full bg-gray-100" // Gray background to indicate readonly
+						/>
+					</div>
+
+					{/* Amount to Withdraw */}
 					<div className="col-span-2">
 						<label className="block text-sm font-medium text-gray-700">Amount *</label>
 						<Input
 							type="number"
 							placeholder="Enter Amount"
 							value={savingAccountData.amount}
-							onChange={(e) => handleInputChange("amount", e.target.value)}
+							disabled={savingAccountData.term !== "No limited"} // Disable input if term is restricted
+							onChange={(e) => handleAmountChange(e.target.value)}
 							className="mt-1 w-full"
 						/>
 					</div>
@@ -223,13 +198,13 @@ const DepositsSavingAccount = () => {
 				<Button
 					type="primary"
 					className="mt-4 w-full bg-blue-600 hover:bg-blue-700"
-					onClick={handleAddSavingAccount}
+					onClick={handleWithdrawSavingAccount}
 				>
-					Add/Deposit Saving Account
+					Withdraw from Saving Account
 				</Button>
 			</div>
 		</UserLayout>
 	);
 };
 
-export default DepositsSavingAccount;
+export default WithdrawsSavingAccount;

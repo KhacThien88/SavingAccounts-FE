@@ -19,6 +19,7 @@ import MonthReport from "@/pages/Users/MonthReport/MonthReport";
 import MyWallet from "@/pages/Users/MyWallet/MyWallet";
 import Profile from "@/pages/Users/Profile/Profile";
 import Transfer from "@/pages/Users/Transfer/Transfer";
+import WithdrawsSavingAccount from "@/pages/Users/WithdrawsSavingAccout/WithdrawsSavingAccount";
 
 const useRouter = () => {
 	const router = createBrowserRouter([
@@ -101,7 +102,7 @@ const useRouter = () => {
 		},
 		{
 			path: PathConstant.userWithdrawsSavingAccount,
-			element: <DepositsSavingAccount />,
+			element: <WithdrawsSavingAccount />,
 		},
 	]);
 
