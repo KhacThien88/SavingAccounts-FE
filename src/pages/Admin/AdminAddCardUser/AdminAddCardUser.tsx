@@ -14,21 +14,15 @@ const AdminAddCardUser: React.FC = () => {
 	const [error, setError] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 
-	// Function to generate a random IdCard
-	const generateRandomIdCard = () => {
-		return `card-${Math.floor(Math.random() * 1000000)}`; // Random IdCard
-	};
+	// Generate a random IdCard
+	const generateRandomIdCard = () => `card-${Math.floor(Math.random() * 1000000)}`;
 
 	const handleAddCard = async () => {
 		if (!idUser.trim() || !typeCard.trim() || !nameOfCard.trim() || !cardNumber.trim()) {
 			setError("All fields are required");
 			return;
 		}
-
-		// Generate random IdCard
 		const newIdCard = generateRandomIdCard();
-
-		// Prepare card information to be sent to API
 		const cardInformation = {
 			IdUser: idUser,
 			TypeOfCard: typeCard,
@@ -38,11 +32,8 @@ const AdminAddCardUser: React.FC = () => {
 		};
 
 		try {
-			// Call the API to add the card
 			const response = await AddCardUser(cardInformation);
-
 			if (response.status === 200) {
-				// Reset the form and show success message
 				setIdCard(newIdCard);
 				setIdUser("");
 				setTypeCard("");
@@ -61,11 +52,10 @@ const AdminAddCardUser: React.FC = () => {
 	return (
 		<AdminLayout>
 			<div className="mx-auto max-w-7xl p-8">
-				{/* Header with Notification and Avatar */}
 				<div className="mb-6 flex items-center justify-between">
 					<div>
-						<h2 className="text-2xl font-semibold text-blue-800">Add Card for User</h2>
-						<p className="text-sm text-gray-500">Add a new card by entering the details below</p>
+						<h2 className="text-2xl font-semibold text-blue-800">Add New Bank Account</h2>
+						<p className="text-sm text-gray-500">Add a new bank account by filling the details below</p>
 					</div>
 					<div className="flex items-center">
 						<button className="relative p-2 text-gray-600 hover:text-gray-900">
@@ -82,97 +72,66 @@ const AdminAddCardUser: React.FC = () => {
 					</div>
 				</div>
 
-				{/* Centered Form */}
-				<div className="flex min-h-[70vh] items-center justify-center">
-					<div className="mx-auto max-w-md rounded-lg bg-white p-4 shadow-md">
-						<h2 className="mb-4 text-xl font-semibold">Card Information</h2>
-
-						{/* IdUser Input */}
-						<label
-							htmlFor="idUser"
-							className="mb-2 block text-sm font-medium text-gray-700"
-						>
-							IdUser
-						</label>
-						<input
-							type="text"
-							id="idUser"
-							value={idUser}
-							onChange={(e) => setIdUser(e.target.value)}
-							placeholder="Enter IdUser"
-							className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
-						/>
-
-						{/* Card Number Input */}
-						<label
-							htmlFor="cardNumber"
-							className="mb-2 mt-4 block text-sm font-medium text-gray-700"
-						>
-							Card Number
-						</label>
-						<input
-							type="text"
-							id="cardNumber"
-							value={cardNumber}
-							onChange={(e) => setCardNumber(e.target.value)}
-							placeholder="Enter Card Number"
-							className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
-						/>
-
-						{/* TypeCard Input */}
-						<label
-							htmlFor="typeCard"
-							className="mb-2 mt-4 block text-sm font-medium text-gray-700"
-						>
-							Type of Card
-						</label>
-						<input
-							type="text"
-							id="typeCard"
-							value={typeCard}
-							onChange={(e) => setTypeCard(e.target.value)}
-							placeholder="Enter Type of Card"
-							className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
-						/>
-
-						{/* NameOfCard Input */}
-						<label
-							htmlFor="nameOfCard"
-							className="mb-2 mt-4 block text-sm font-medium text-gray-700"
-						>
-							Name of Card
-						</label>
-						<input
-							type="text"
-							id="nameOfCard"
-							value={nameOfCard}
-							onChange={(e) => setNameOfCard(e.target.value)}
-							placeholder="Enter Name of Card"
-							className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
-						/>
-
-						{/* Error and Success Messages */}
-						{error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-						{successMessage && <p className="mt-2 text-sm text-green-500">{successMessage}</p>}
-
-						{/* Add Card Button */}
-						<button
-							onClick={handleAddCard}
-							className="mt-4 w-full rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-600"
-						>
-							Add Card
-						</button>
-
-						{/* Display generated IdCard */}
-						{idCard && (
-							<p className="mt-4 text-green-600">
-								New Card Added: <span className="font-semibold">{idCard}</span>
-								<br />
-								Type: {typeCard} <br />
-								Name: {nameOfCard}
-							</p>
-						)}
+				<div className="rounded-md bg-white p-6 shadow-md">
+					<h2 className="mb-4 text-xl font-semibold text-gray-800">Add New Savings Account</h2>
+					<div className="grid grid-cols-2 gap-4">
+						<div className="col-span-2">
+							<label className="block text-sm font-medium text-gray-700">Id User *</label>
+							<input
+								type="text"
+								placeholder="Enter IdUser"
+								value={idUser}
+								onChange={(e) => setIdUser(e.target.value)}
+								className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500"
+							/>
+						</div>
+						<div className="col-span-2">
+							<label className="block text-sm font-medium text-gray-700">Card Number *</label>
+							<input
+								type="text"
+								placeholder="Enter Card Number"
+								value={cardNumber}
+								onChange={(e) => setCardNumber(e.target.value)}
+								className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500"
+							/>
+						</div>
+						<div className="col-span-2">
+							<label className="block text-sm font-medium text-gray-700">Type of Card *</label>
+							<input
+								type="text"
+								placeholder="Enter Type of Card"
+								value={typeCard}
+								onChange={(e) => setTypeCard(e.target.value)}
+								className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500"
+							/>
+						</div>
+						<div className="col-span-2">
+							<label className="block text-sm font-medium text-gray-700">Name of Card *</label>
+							<input
+								type="text"
+								placeholder="Enter Name of Card"
+								value={nameOfCard}
+								onChange={(e) => setNameOfCard(e.target.value)}
+								className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500"
+							/>
+						</div>
 					</div>
+					{error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+					{successMessage && <p className="mt-2 text-sm text-green-500">{successMessage}</p>}
+					<button
+						onClick={handleAddCard}
+						className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+					>
+						Add Card
+					</button>
+					{idCard && (
+						<p className="mt-4 text-green-600">
+							New Card Added: <span className="font-semibold">{idCard}</span>
+							<br />
+							Type: {typeCard} <br />
+							Name: {nameOfCard}
+						</p>
+					)}
 				</div>
 			</div>
 		</AdminLayout>

@@ -74,6 +74,32 @@ const Sidebar: React.FC = () => {
 					</li>
 					<li>
 						<button
+							onClick={() => handleNavigation(PathConstant.userDepositsSavingAccount)}
+							className={`flex w-full items-center rounded-lg px-4 py-2 ${
+								isActive(PathConstant.userDepositsSavingAccount)
+									? "bg-gray-200 text-yellow-500"
+									: "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+							}`}
+						>
+							<span className="material-icons-outlined">account_balance_wallet</span>
+							<span className="ml-3">Deposits Saving Account</span>
+						</button>
+					</li>
+					<li>
+						<button
+							onClick={() => handleNavigation(PathConstant.userWithdrawsSavingAccount)}
+							className={`flex w-full items-center rounded-lg px-4 py-2 ${
+								isActive(PathConstant.userWithdrawsSavingAccount)
+									? "bg-gray-200 text-yellow-500"
+									: "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+							}`}
+						>
+							<span className="material-icons-outlined">account_balance_wallet</span>
+							<span className="ml-3">Withdraw Saving Account</span>
+						</button>
+					</li>
+					<li>
+						<button
 							onClick={() => handleNavigation(PathConstant.userListSavingAccounts)}
 							className={`flex w-full items-center rounded-lg px-4 py-2 ${
 								isActive(PathConstant.userListSavingAccounts)

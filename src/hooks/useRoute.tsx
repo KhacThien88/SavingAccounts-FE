@@ -12,6 +12,7 @@ import Logout from "@/pages/LogoutPage/Logout";
 import NotFound from "@/pages/NotFoundPage/NotFoundPage";
 import ResetPassword from "@/pages/ResetPasswordPage/ResetPassword";
 import SignUp from "@/pages/SignUp/SignUp";
+import DepositsSavingAccount from "@/pages/Users/DeposisSavingAccount/DepositsSavingAccount";
 import HistoryUsers from "@/pages/Users/History/HistoryUser";
 import ListSavingAccounts from "@/pages/Users/ListSavingAccount/ListSavingAccounts";
 import MonthReport from "@/pages/Users/MonthReport/MonthReport";
@@ -93,6 +94,14 @@ const useRouter = () => {
 		{
 			path: PathConstant.userMonthReport,
 			element: <MonthReport />,
+		},
+		{
+			path: PathConstant.userDepositsSavingAccount,
+			element: <DepositsSavingAccount />,
+		},
+		{
+			path: PathConstant.userWithdrawsSavingAccount,
+			element: <DepositsSavingAccount />,
 		},
 	]);
 
