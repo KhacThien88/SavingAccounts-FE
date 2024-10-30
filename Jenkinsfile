@@ -103,7 +103,7 @@ spec:
       - name: savingaccountfe
         image: ktei8htop15122004/savingaccountfe:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         resources:
           requests:
             memory: "128Mi"
@@ -126,8 +126,8 @@ spec:
     app: react-app
   ports:
     - name: http
-      port: 3000
-      targetPort: 3000
+      port: 80
+      targetPort: 80
       nodePort: 32100'''
     }
 }
