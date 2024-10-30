@@ -116,7 +116,7 @@ spec:
 
     stage('Create Service YAML') {
     steps {
-        writeFile file: '/home/jenkins/agent/workspace/SavingAccount-FE_main/service-react.yaml', text: '''apiVersion: v1
+        writeFile file: '/home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/service-react.yaml', text: '''apiVersion: v1
 kind: Service
 metadata:
   name: react-app-svc
