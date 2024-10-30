@@ -61,6 +61,7 @@ pipeline {
       steps {
         container('docker') {
           script {
+            sh 'docker pull node:latest'
             sh 'docker build --network=host -t ktei8htop15122004/savingaccountfe .'
           }
         }
