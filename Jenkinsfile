@@ -128,7 +128,7 @@ spec:
     - name: http
       port: 3000
       targetPort: 3000
-      nodePort: 32200'''
+      nodePort: 32100'''
     }
 }
 
