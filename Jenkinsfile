@@ -61,7 +61,7 @@ pipeline {
       steps {
         container('docker') {
           script {
-            sh 'docker build --network=host -t ktei8htop15122004/ .'
+            sh 'docker build --network=host -t ktei8htop15122004/savingaccountfe .'
           }
         }
       }
