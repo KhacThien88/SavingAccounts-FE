@@ -83,7 +83,7 @@ pipeline {
     
     stage('Create Deployment YAML') {
     steps {
-        writeFile file: '/home/jenkins/agent/workspace/SavingAccount-FE_main/deployment-react.yaml', text: '''apiVersion: apps/v1
+        writeFile file: '/home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/deployment-react.yaml', text: '''apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: react-app-deployment
