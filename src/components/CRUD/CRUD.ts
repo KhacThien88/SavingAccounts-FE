@@ -46,3 +46,31 @@ export const ChangePassword = (changePasswordData: any) => {
 		},
 	});
 };
+export const AddCardUser = (CardInformation: any) => {
+	return axiosUtils.post(`${PathConstant.adminDashboardAddCardUser}`, CardInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
+export const AddSavingAccount = (SavingAccountInformation: any) => {
+	return axiosUtils.post(`${PathConstant.userOpeningSavingAccount}`, SavingAccountInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
+export const depositsSavingAccount = (SavingAccountInformation: any) => {
+	return axiosUtils.post(`${PathConstant.userDepositsSavingAccount}`, SavingAccountInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
+export const withdrawsSavingAccount = (SavingAccountInformation: any) => {
+	return axiosUtils.post(`${PathConstant.userWithdrawsSavingAccount}`, SavingAccountInformation, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

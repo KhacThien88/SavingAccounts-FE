@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Space, Table } from "antd";
 import { ColumnType } from "antd/es/table";
 
-import Layout from "../Layout/Layout";
+import Layout from "../Layout/UserLayout";
 
 interface MonthlyReport {
 	key: string;

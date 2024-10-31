@@ -1,12 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import PathConstant from "constant/PathConstant";
+import { GetRoleUser } from "utils/UserUtil";
 
 const NotFound: React.FC = () => {
 	const navigate = useNavigate();
 
 	const handleGoHome = () => {
-		navigate(PathConstant.userWallet);
+		if (GetRoleUser() === "Admin") {
+			navigate(PathConstant.adminDashboardHistory);
+		} else {
+			navigate(PathConstant.userWallet);
+		}
 	};
 
 	return (

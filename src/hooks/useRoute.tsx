@@ -2,20 +2,24 @@ import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import PathConstant from "constant/PathConstant";
 
+import AddCardUser from "@/pages/Admin/AdminAddCardUser/AdminAddCardUser";
 import HistoryTransfer from "@/pages/Admin/History/History";
 import ManageUsers from "@/pages/Admin/ManagerUser/ManagerUser";
 import TransferUsers from "@/pages/Admin/TransferUsers/TransferUsers";
 import ForgotPassword from "@/pages/LoginPage/ForgotPassword";
 import Login from "@/pages/LoginPage/Login";
-import SignUp from "@/pages/LoginPage/SignUp";
+import Logout from "@/pages/LogoutPage/Logout";
 import NotFound from "@/pages/NotFoundPage/NotFoundPage";
 import ResetPassword from "@/pages/ResetPasswordPage/ResetPassword";
+import SignUp from "@/pages/SignUp/SignUp";
+import DepositsSavingAccount from "@/pages/Users/DeposisSavingAccount/DepositsSavingAccount";
 import HistoryUsers from "@/pages/Users/History/HistoryUser";
 import ListSavingAccounts from "@/pages/Users/ListSavingAccount/ListSavingAccounts";
 import MonthReport from "@/pages/Users/MonthReport/MonthReport";
 import MyWallet from "@/pages/Users/MyWallet/MyWallet";
 import Profile from "@/pages/Users/Profile/Profile";
 import Transfer from "@/pages/Users/Transfer/Transfer";
+import WithdrawsSavingAccount from "@/pages/Users/WithdrawsSavingAccout/WithdrawsSavingAccount";
 
 const useRouter = () => {
 	const router = createBrowserRouter([
@@ -57,6 +61,10 @@ const useRouter = () => {
 			element: <HistoryTransfer />,
 		},
 		{
+			path: PathConstant.adminDashboardAddCardUser,
+			element: <AddCardUser />,
+		},
+		{
 			path: PathConstant.signUpPage,
 			element: <SignUp />,
 		},
@@ -80,13 +88,21 @@ const useRouter = () => {
 			path: PathConstant.userListSavingAccounts,
 			element: <ListSavingAccounts />,
 		},
-		// {
-		// 	path: PathConstant.userHelp,
-		// 	element: <HelpUser />,
-		// },
+		{
+			path: PathConstant.logout,
+			element: <Logout />,
+		},
 		{
 			path: PathConstant.userMonthReport,
 			element: <MonthReport />,
+		},
+		{
+			path: PathConstant.userDepositsSavingAccount,
+			element: <DepositsSavingAccount />,
+		},
+		{
+			path: PathConstant.userWithdrawsSavingAccount,
+			element: <WithdrawsSavingAccount />,
 		},
 	]);
 

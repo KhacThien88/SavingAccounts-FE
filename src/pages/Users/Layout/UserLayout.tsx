@@ -1,10 +1,11 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 import Sidebar from "../Sidebar/Sidebar";
 
 import { LayoutProps } from "./Layout.type";
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const UserLayout: React.FC<LayoutProps> = ({ children }) => {
 	return (
 		<div className="flex">
 			<Sidebar />
@@ -13,4 +14,4 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 	);
 };
 
-export default Layout;
+export default UserLayout;
