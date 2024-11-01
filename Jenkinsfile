@@ -126,8 +126,8 @@ spec:
     app: react-app
   ports:
     - name: http
-      port: 81
-      targetPort: 81
+      port: 80
+      targetPort: 80
       nodePort: 32100'''
     }
 }
