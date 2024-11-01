@@ -5,7 +5,8 @@ type DecodedToken = any;
 export const GetUserId = () => {
 	const token = localStorage.getItem("token");
 	if (!token) {
-		throw new Error("User not authenticated");
+		window.location.href = "/login";
+		return null;
 	}
 
 	const decodedToken = jwtDecode<DecodedToken>(token);
@@ -16,7 +17,8 @@ export const GetUserId = () => {
 export const GetRoleUser = () => {
 	const token = localStorage.getItem("token");
 	if (!token) {
-		throw new Error("User not authenticated");
+		window.location.href = "/login";
+		return null;
 	}
 	const decodedToken = jwtDecode<DecodedToken>(token);
 	return decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];

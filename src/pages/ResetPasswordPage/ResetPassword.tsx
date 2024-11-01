@@ -1,24 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PathConstant from "constant/PathConstant";
+
+import { resetPassword } from "@/components/CRUD/CRUD";
 
 const ResetPassword: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [token, setToken] = useState("");
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [error, setError] = useState("");
+	const [success, setSuccess] = useState("");
+	const navigate = useNavigate();
 
-	const handleToggleNewPasswordVisibility = () => {
-		setShowNewPassword(!showNewPassword);
-	};
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const tokenFromUrl = urlParams.get("token")?.replace(/ /g, "+");
+		const emailFromUrl = urlParams.get("email");
 
-	const handleToggleConfirmPasswordVisibility = () => {
-		setShowConfirmPassword(!showConfirmPassword);
-	};
+		if (tokenFromUrl) {
+			setToken(tokenFromUrl);
+		} else {
+			setError("Token is missing from the URL.");
+		}
 
-	const handleSubmit = (e: React.FormEvent) => {
+		if (emailFromUrl) {
+			setEmail(emailFromUrl);
+		} else {
+			setError("Email is missing from the URL.");
+		}
+	}, []);
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Handle reset password logic here
-		console.log({ email, newPassword, confirmPassword });
+		setError("");
+		setSuccess("");
+
+		if (newPassword !== confirmPassword) {
+			setError("Mật khẩu xác nhận không khớp.");
+			return;
+		}
+
+		if (!token || !email) {
+			setError("Token and Email are required.");
+			return;
+		}
+
+		try {
+			await resetPassword({
+				Email: email,
+				NewPassword: newPassword,
+				Token: token,
+			});
+			setSuccess("Đặt lại mật khẩu thành công.");
+		} catch (err: any) {
+			setError(err.response?.data?.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+		}
+	};
+
+	const handleBackToSignIn = () => {
+		navigate(PathConstant.loginPage);
 	};
 
 	return (
@@ -26,23 +69,9 @@ const ResetPassword: React.FC = () => {
 			<div className="w-full max-w-sm rounded-lg bg-white p-8 shadow-md">
 				<h2 className="mb-2 text-center text-2xl font-bold text-gray-800">Reset Password</h2>
 				<p className="mb-6 text-center text-gray-600">Create your new password</p>
+				{error && <p className="mb-4 text-center text-red-600">{error}</p>}
+				{success && <p className="mb-4 text-center text-green-600">{success}</p>}
 				<form onSubmit={handleSubmit}>
-					<div className="mb-4">
-						<label
-							htmlFor="email"
-							className="mb-2 block font-medium text-gray-700"
-						>
-							Email
-						</label>
-						<input
-							type="email"
-							id="email"
-							placeholder="Email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-					</div>
 					<div className="mb-4">
 						<label
 							htmlFor="new-password"
@@ -61,31 +90,9 @@ const ResetPassword: React.FC = () => {
 							/>
 							<span
 								className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
-								onClick={handleToggleNewPasswordVisibility}
+								onClick={() => setShowNewPassword(!showNewPassword)}
 							>
-								{showNewPassword ? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5 text-gray-600"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path d="M10 3.5C5.755 3.5 2.144 6.225 1 10c1.144 3.775 4.755 6.5 9 6.5s7.856-2.725 9-6.5c-1.144-3.775-4.755-6.5-9-6.5zm0 11a4.5 4.5 0 110-9 4.5 4.5 0 010 9zm0-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-									</svg>
-								) : (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5 text-gray-600"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M2.293 9.707a1 1 0 011.414 0A7.968 7.968 0 0110 8c1.978 0 3.825.722 5.293 1.707a1 1 0 011.414-1.414A9.968 9.968 0 0010 6c-2.695 0-5.2 1.029-7.293 2.707a1 1 0 010 1.414zM10 12a4.978 4.978 0 01-1.979-.402 1 1 0 00-1.581 1.219A6.978 6.978 0 0010 14a6.978 6.978 0 003.56-.943 1 1 0 00-1.058-1.651A4.978 4.978 0 0110 12zM4.293 4.293a1 1 0 011.414 0l10 10a1 1 0 01-1.414 1.414l-10-10a1 1 0 010-1.414z"
-											clipRule="evenodd"
-										/>
-									</svg>
-								)}
+								{/* Icon toggle logic */}
 							</span>
 						</div>
 					</div>
@@ -107,31 +114,9 @@ const ResetPassword: React.FC = () => {
 							/>
 							<span
 								className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
-								onClick={handleToggleConfirmPasswordVisibility}
+								onClick={() => setShowConfirmPassword(!showConfirmPassword)}
 							>
-								{showConfirmPassword ? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5 text-gray-600"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path d="M10 3.5C5.755 3.5 2.144 6.225 1 10c1.144 3.775 4.755 6.5 9 6.5s7.856-2.725 9-6.5c-1.144-3.775-4.755-6.5-9-6.5zm0 11a4.5 4.5 0 110-9 4.5 4.5 0 010 9zm0-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-									</svg>
-								) : (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5 text-gray-600"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M2.293 9.707a1 1 0 011.414 0A7.968 7.968 0 0110 8c1.978 0 3.825.722 5.293 1.707a1 1 0 011.414-1.414A9.968 9.968 0 0010 6c-2.695 0-5.2 1.029-7.293 2.707a1 1 0 010 1.414zM10 12a4.978 4.978 0 01-1.979-.402 1 1 0 00-1.581 1.219A6.978 6.978 0 0010 14a6.978 6.978 0 003.56-.943 1 1 0 00-1.058-1.651A4.978 4.978 0 0110 12zM4.293 4.293a1 1 0 011.414 0l10 10a1 1 0 01-1.414 1.414l-10-10a1 1 0 010-1.414z"
-											clipRule="evenodd"
-										/>
-									</svg>
-								)}
+								{/* Icon toggle logic */}
 							</span>
 						</div>
 					</div>
@@ -142,6 +127,14 @@ const ResetPassword: React.FC = () => {
 						Reset Password
 					</button>
 				</form>
+				<div className="mt-4 text-center">
+					<a
+						onClick={handleBackToSignIn}
+						className="cursor-pointer text-sm text-gray-500 hover:text-gray-700"
+					>
+						&#x2190; Back to sign in
+					</a>
+				</div>
 			</div>
 		</div>
 	);

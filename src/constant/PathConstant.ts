@@ -4,6 +4,8 @@ export default class PathConstant {
 	static loginPage = "/login";
 	static forgotPasswordPage = "/forgot-password";
 	static signUpPage = "/signup";
+	static forgotResetPassword = "/forgot-password/ResetPassword";
+	static forgotPasswordGmail = "/forgot-password/ForgotPassword";
 	//Authentication
 	static loginAuthentication = "/Account/SignIn";
 	static verifyPasswordAuthentication = "/Account/VerifyPassword";

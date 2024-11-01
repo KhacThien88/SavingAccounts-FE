@@ -74,3 +74,18 @@ export const withdrawsSavingAccount = (SavingAccountInformation: any) => {
 		},
 	});
 };
+export const forgotPassword = (forgotPassword: any) => {
+	return axiosUtils.post(`${PathConstant.forgotPasswordGmail}`, forgotPassword, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
+
+export const resetPassword = (resetPassword: any) => {
+	return axiosUtils.post(`${PathConstant.forgotResetPassword}`, resetPassword, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};

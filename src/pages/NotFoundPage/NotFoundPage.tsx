@@ -9,8 +9,10 @@ const NotFound: React.FC = () => {
 	const handleGoHome = () => {
 		if (GetRoleUser() === "Admin") {
 			navigate(PathConstant.adminDashboardHistory);
-		} else {
+		} else if (GetRoleUser() === "User") {
 			navigate(PathConstant.userWallet);
+		} else {
+			navigate(PathConstant.loginPage);
 		}
 	};
 

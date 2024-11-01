@@ -1,18 +1,41 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PathConstant from "constant/PathConstant";
+
+import { forgotPassword } from "@/components/CRUD/CRUD";
 
 const ForgotPassword: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState(""); // Thêm biến trạng thái cho số điện thoại
 	const [resetMethod, setResetMethod] = useState<"email" | "sms">("email");
-
-	const handleSubmit = (e: React.FormEvent) => {
+	const [message, setMessage] = useState("");
+	const navigate = useNavigate();
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Logic for sending reset link
-		if (resetMethod === "email") {
-			console.log(`Reset via: ${resetMethod}, Email: ${email}`);
-		} else {
-			console.log(`Reset via: ${resetMethod}, Phone: ${phone}`);
+
+		try {
+			if (resetMethod === "email") {
+				const response = await forgotPassword({
+					Email: email,
+					ResetMethod: "email",
+					ClientURI: window.location.origin,
+				});
+				setMessage(response.data);
+			} else {
+				// const response = await axios.post("/api/ForgotPassword/ForgotPassword", {
+				// 	phone: phone,
+				// 	resetMethod: "sms",
+				// 	clientURI: window.location.origin,
+				// });
+				// setMessage(response.data);
+			}
+		} catch (error) {
+			console.error("Error sending reset link:", error);
+			setMessage("An error occurred while sending the reset link.");
 		}
+	};
+	const handleBackToSignIn = () => {
+		navigate(PathConstant.loginPage);
 	};
 
 	return (
@@ -106,10 +129,11 @@ const ForgotPassword: React.FC = () => {
 						Send Link Reset Password
 					</button>
 				</form>
+				{message && <p className="mt-4 text-center text-gray-700">{message}</p>}
 				<div className="mt-4 text-center">
 					<a
-						href="./Login.tsx"
-						className="text-sm text-gray-500 hover:text-gray-700"
+						onClick={handleBackToSignIn}
+						className="cursor-pointer text-sm text-gray-500 hover:text-gray-700"
 					>
 						&#x2190; Back to sign in
 					</a>
