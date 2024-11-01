@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import PathConstant from "constant/PathConstant";
 
 import { SignUpAPI } from "@/components/CRUD/CRUD";
@@ -36,7 +35,7 @@ const SignUp: React.FC = () => {
 		};
 
 		try {
-			const response = await SignUpAPI(signUpData);
+			await SignUpAPI(signUpData);
 			alert("SignUp Successful:");
 			navigate(PathConstant.loginPage);
 		} catch (error) {

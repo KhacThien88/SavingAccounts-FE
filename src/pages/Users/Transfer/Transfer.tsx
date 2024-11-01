@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiBell } from "react-icons/fi";
-import { Button, Input, Radio } from "antd";
+import { Button, Radio } from "antd";
 
 import Layout from "../Layout/UserLayout";
 
