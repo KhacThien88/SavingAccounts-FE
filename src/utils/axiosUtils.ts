@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosUtils = axios.create({
-	baseURL: "https://www.devkhacthien.somee.com/api",
+	baseURL: `${process.env.REACT_APP_API}`,
 	timeout: 10000,
 	headers: {
 		"Content-Type": "application/json",
