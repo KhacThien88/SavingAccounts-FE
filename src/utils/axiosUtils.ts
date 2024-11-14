@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosUtils = axios.create({
-	baseURL: "https://www.hcmuskhacthien.somee.com/api",
+	baseURL: "https://www.devkhacthien.somee.com/api",
 	timeout: 10000,
 	headers: {
 		"Content-Type": "application/json",
