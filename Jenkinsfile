@@ -80,7 +80,41 @@ pipeline {
         }
       }
     }
-    
+    stage('Create resource azure Terraform'){
+      steps {
+        script{
+          sh 'terraform init ~/demo_linux/terraform-azure'
+          sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
+          sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+        }
+      }
+    }
+    stage('Install script in VM'){
+      steps{
+        script{
+          def vm_1_ip = sh(script: "terraform output -raw public_ip_vm_1", returnStdout: true).trim()
+          def vm_2_ip = sh(script: "terraform output -raw public_ip_vm_2", returnStdout: true).trim()
+          sshagent(['ssh-agent']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no adminuser@${vm_ip} << EOF
+                        if [ ! -d ~/kubespray ]; then
+                              echo "Cloning kubespray repository..."
+                              sudo apt update
+                              sudo apt install -y git python3 python3-pip
+                              cd ~
+                              git clone https://github.com/kubernetes-sigs/kubespray.git
+                              cd kubespray
+                              pip3 install -r requirements.txt
+                              cp -r inventory/sample inventory/mycluster
+                        else
+                              echo "Kubespray directory already exists, skipping installation."
+                        fi
+                        EOF
+                        """
+                    }
+        }
+      }
+    }
     stage('Create Deployment YAML') {
     steps {
         writeFile file: '/home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/deployment-react.yaml', text: '''apiVersion: apps/v1
