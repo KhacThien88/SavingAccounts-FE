@@ -84,8 +84,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        sudo apt update
-                        sudo apt install -y wget unzip curl jq
+                        apt update
+                        apt install -y wget unzip curl jq
 
                         # Cài đặt Terraform (nếu chưa có)
                         if ! command -v terraform &> /dev/null
@@ -93,7 +93,7 @@ pipeline {
                             echo "Terraform not found, installing..."
                             wget https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)_linux_amd64.zip
                             unzip terraform_*.zip
-                            sudo mv terraform /usr/local/bin/
+                            mv terraform /usr/local/bin/
                         else
                             echo "Terraform is already installed"
                         fi
