@@ -80,15 +80,6 @@ pipeline {
         }
       }
     }
-    stage('Create resource azure Terraform'){
-      steps {
-        script{
-          sh 'terraform init ~/demo_linux/terraform-azure'
-          sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
-          sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
-        }
-      }
-    }
     stage('Install Tools') {
             steps {
                 script {
@@ -110,6 +101,16 @@ pipeline {
                 }
             }
     }
+    stage('Create resource azure Terraform'){
+      steps {
+        script{
+          sh 'terraform init ~/demo_linux/terraform-azure'
+          sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
+          sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+        }
+      }
+    }
+    
     stage('Install script in VM'){
       steps{
         script{
