@@ -3,6 +3,13 @@ remote.name = 'vkt'
 remote.host = '192.168.23.138'
 remote.allowAnyHosts = true
 
+def vm1=[:]
+vm1.name = 'vm1'
+vm1.allowAnyHosts = true
+
+def vm2=[:]
+vm2.name = 'vm2'
+vm2.allowAnyHosts = true
 
 pipeline {
   environment {
@@ -127,7 +134,21 @@ pipeline {
                 sh 'terraform init ~/demo_linux/terraform-azure'
                 sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
                 sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+                cd ~/demo_linux/terraform-azure
+                vm1_host=\$(terraform output -raw public_ip_vm_1)
+                vm2_host=\$(terraform output -raw public_ip_vm_2)
+                echo "VM1 IP: \$vm1_host"
+                echo "VM2 IP: \$vm2_host"
+                echo "vm1_host=\$vm1_host" > vm1_host.txt
+                echo "vm2_host=\$vm2_host" > vm2_host.txt
+                
         """)
+        script {
+            vm1.host = readFile('vm1_host.txt').trim()
+            vm2.host = readFile('vm2_host.txt').trim()
+            echo "VM1 IP: ${vm1.host}"
+            echo "VM2 IP: ${vm2.host}"
+        }
     }
     }
     
