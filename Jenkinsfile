@@ -124,28 +124,45 @@ pipeline {
 }
 
 
-    stage('Create resource azure Terraform'){
-        steps {
+stage('Create resource azure Terraform') {
+    steps {
         script {
             remote.user = 'root'
             remote.password = '111111aA'
         }
         sshCommand(remote: remote, command: """
-                whoami
-                cd ~/demo_linux/terraform-azure
-                sh 'terraform init'
-                sh 'terraform plan -out main.tfplan'
-                sh 'terraform apply -auto-approve main.tfplan'
-                cd ~/demo_linux/terraform-azure
-                ${vm1.host}=\$(terraform output -raw public_ip_vm_1)
-                ${vm2.host}=\$(terraform output -raw public_ip_vm_2)
+            whoami
+            cd ~/demo_linux/terraform-azure
+            sh 'terraform init'
+            sh 'terraform plan -out main.tfplan'
+            sh 'terraform apply -auto-approve main.tfplan'
+            
+            # Capture the VM public IPs using Terraform outputs
+            vm1_host=\$(terraform output -raw public_ip_vm_1)
+            vm2_host=\$(terraform output -raw public_ip_vm_2)
+            
+            # Save them to a temporary file
+            echo "vm1_host=\$vm1_host" >> terraform_output.env
+            echo "vm2_host=\$vm2_host" >> terraform_output.env
+            
+            echo "VM1 IP: \$vm1_host"
+            echo "VM2 IP: \$vm2_host"
         """)
+        
         script {
-            echo "VM1 IP: ${vm1.host}"
-            echo "VM2 IP: ${vm2.host}"
+            def terraformEnv = readFile('terraform_output.env')
+            
+            def vm1Host = terraformEnv.split("\n").find { it.startsWith("vm1_host=") }?.split("=")[1]
+            def vm2Host = terraformEnv.split("\n").find { it.startsWith("vm2_host=") }?.split("=")[1]
+            
+            echo "VM1 IP: ${vm1Host}"
+            echo "VM2 IP: ${vm2Host}"
+
+            vm1.host = vm1Host
+            vm2.host = vm2Host
         }
     }
-    }
+}
     
 //     stage('Install script in VM'){
 //       steps{
