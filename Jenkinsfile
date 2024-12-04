@@ -142,8 +142,8 @@ stage('Create resource azure Terraform') {
             vm2_host=\$(terraform output -raw public_ip_vm_2)
             
             # Save them to a temporary file
-            echo "vm1_host=\$vm1_host" >> terraform_output.env
-            echo "vm2_host=\$vm2_host" >> terraform_output.env
+            echo "vm1_host=\$vm1_host" >> /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform_output.env
+            echo "vm2_host=\$vm2_host" >> /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform_output.env
             
             echo "VM1 IP: \$vm1_host"
             echo "VM2 IP: \$vm2_host"
