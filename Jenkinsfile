@@ -86,7 +86,7 @@ pipeline {
     stage('Copy resource'){
         steps {
           script {
-            sh 'cp ./terraform-azure/provider.tf ~/demo_linux/terraform-azure/provider.tf '
+            sh 'cp /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/demo_linux/terraform-azure/provider.tf ./terraform-azure/provider.tf '
           }
         }
     }    
@@ -129,7 +129,7 @@ pipeline {
     stage('Create Resource Terraform in Azure'){
       steps{
         script{
-          sh 'cd ./terraform-azure'
+          sh 'cd /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure'
           sh 'terraform init'
           sh 'terraform plan -out main.tfplan'
           sh 'terraform apply main.tfplan'
