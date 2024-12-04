@@ -131,9 +131,11 @@ pipeline {
             remote.password = '111111aA'
         }
         sshCommand(remote: remote, command: """
-                sh 'terraform init ~/demo_linux/terraform-azure'
-                sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
-                sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+                whoami
+                cd ~/demo_linux/terraform-azure
+                sh 'terraform init'
+                sh 'terraform plan -out main.tfplan'
+                sh 'terraform appy -auto-approve main.tfplan'
                 cd ~/demo_linux/terraform-azure
                 vm1_host=\$(terraform output -raw public_ip_vm_1)
                 vm2_host=\$(terraform output -raw public_ip_vm_2)
