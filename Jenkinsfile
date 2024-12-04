@@ -141,26 +141,8 @@ stage('Create resource azure Terraform') {
             vm1_host=\$(terraform output -raw public_ip_vm_1)
             vm2_host=\$(terraform output -raw public_ip_vm_2)
             
-            # Save them to a temporary file
-            echo "vm1_host=\$vm1_host" >> /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform_output.env
-            echo "vm2_host=\$vm2_host" >> /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform_output.env
-            
-            echo "VM1 IP: \$vm1_host"
-            echo "VM2 IP: \$vm2_host"
-        """)
-        
-        script {
-            def terraformEnv = readFile('terraform_output.env')
-            
-            def vm1Host = terraformEnv.split("\n").find { it.startsWith("vm1_host=") }?.split("=")[1]
-            def vm2Host = terraformEnv.split("\n").find { it.startsWith("vm2_host=") }?.split("=")[1]
-            
-            echo "VM1 IP: ${vm1Host}"
-            echo "VM2 IP: ${vm2Host}"
 
-            vm1.host = vm1Host
-            vm2.host = vm2Host
-        }
+        """)
     }
 }
     
