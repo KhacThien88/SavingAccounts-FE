@@ -116,13 +116,16 @@ pipeline {
                 sudo tee /etc/apt/sources.list.d/hashicorp.list
                 sudo apt update
                 sudo apt-get install terraform
+                whoami
+                cd ~/demo_linux/terraform-azure
+                pwd
             else
                 echo "Terraform is already installed"
+                 whoami
+                cd ~/demo_linux/terraform-azure
+                pwd
             fi
-            whoami
-            cd ~/demo_linux/terraform-azure
-            pwd
-            
+ 
         """)
     }
 }
