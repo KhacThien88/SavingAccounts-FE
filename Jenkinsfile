@@ -131,12 +131,7 @@ stage('Create resource Azure Terraform') {
             remote.password = '111111aA'
         }
         sshCommand(remote: remote, command: """
-          whoami
-          cd ~/demo_linux/terraform-azure
-          pwd
-          sh 'terraform init'
-          sh 'terraform plan -out main.tfplan'
-          sh "terraform apply main.tfplan"
+          terraform --version
           """)
     }
 }
