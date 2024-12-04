@@ -57,8 +57,65 @@ pipeline {
       '''
     }
   }
-
+  
   stages {
+    stage('Checkout Code') {
+            steps {
+                script {
+                    if (!fileExists('SavingAccounts-FE')) {
+                        echo 'Checking out code from Git repository...'
+                        git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
+                    } else {
+                        echo 'Code already checked out, skipping.'
+                    }
+                }
+            }
+        }
+    stage('Checkout resource') {
+            steps {
+                script {
+                    if (!fileExists('terraform-azure')) {
+                        echo 'Checking out code from Git repository...'
+                        git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
+                    } else {
+                        echo 'Code already checked out, skipping.'
+                    }
+                }
+            }
+        }
+    stage('Copy resource'){
+        steps {
+          script {
+            sh 'cp ./terraform-azure/provider.tf ~/demo_linux/terraform-azure/provider.tf '
+          }
+        }
+    }    
+    stage('Install Terraform') {
+    steps {
+        script {
+            """
+            if ! command -v terraform &> /dev/null
+            then
+                echo "Terraform not found, installing..."
+                sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+                wget -O- https://apt.releases.hashicorp.com/gpg | \
+                gpg --dearmor | \
+                sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+                gpg --no-default-keyring \
+                --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+                --fingerprint
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+                https://apt.releases.hashicorp.com \$(lsb_release -cs) main" | \
+                sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt update
+                sudo apt-get install terraform
+            else
+                echo "Terraform is already installed"
+            fi 
+        """
+        }
+    }
+    }
     stage('Unit Test') {
       when {
         expression {
@@ -69,6 +126,18 @@ pipeline {
         sh 'echo Unit Test'
       }
     }
+    stage('Create Resource Terraform in Azure'){
+      steps{
+        script{
+          sh 'cd ./terraform-azure'
+          sh 'terraform init'
+          sh 'terraform plan -out main.tfplan'
+          sh 'terraform apply main.tfplan'
+        }
+      }
+    }
+}
+   
 
     // stage('Build image') {
     //   steps {
@@ -94,46 +163,46 @@ pipeline {
     //   }
     // }
     
-    stage('Install Tools') {
-    steps {
-        script {
-            remote.user = 'root'
-            remote.password = '111111aA'
-        }
-        sshCommand(remote: remote, command: """
-            if ! command -v terraform &> /dev/null
-            then
-                echo "Terraform not found, installing..."
-                sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
-                wget -O- https://apt.releases.hashicorp.com/gpg | \
-                gpg --dearmor | \
-                sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-                gpg --no-default-keyring \
-                --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
-                --fingerprint
-                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-                https://apt.releases.hashicorp.com \$(lsb_release -cs) main" | \
-                sudo tee /etc/apt/sources.list.d/hashicorp.list
-                sudo apt update
-                sudo apt-get install terraform
-            else
-                echo "Terraform is already installed"
-            fi 
-        """)
-    }
-}
+//     stage('Install Tools') {
+//     steps {
+//         script {
+//             remote.user = 'root'
+//             remote.password = '111111aA'
+//         }
+//         sshCommand(remote: remote, command: """
+//             if ! command -v terraform &> /dev/null
+//             then
+//                 echo "Terraform not found, installing..."
+//                 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+//                 wget -O- https://apt.releases.hashicorp.com/gpg | \
+//                 gpg --dearmor | \
+//                 sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+//                 gpg --no-default-keyring \
+//                 --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+//                 --fingerprint
+//                 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+//                 https://apt.releases.hashicorp.com \$(lsb_release -cs) main" | \
+//                 sudo tee /etc/apt/sources.list.d/hashicorp.list
+//                 sudo apt update
+//                 sudo apt-get install terraform
+//             else
+//                 echo "Terraform is already installed"
+//             fi 
+//         """)
+//     }
+// }
 
 
-stage('Create resource Azure Terraform') {
-    steps {
-        script {
-            remote.user = 'root'
-            remote.password = '111111aA'
-        }
-        sshCommand remote: remote, command: 'whoami'
+// stage('Create resource Azure Terraform') {
+//     steps {
+//         script {
+//             remote.user = 'root'
+//             remote.password = '111111aA'
+//         }
+//         sshCommand remote: remote, command: 'whoami'
 
-    }
-}
+//     }
+// }
     
 //     stage('Install script in VM'){
 //       steps{
@@ -226,5 +295,5 @@ stage('Create resource Azure Terraform') {
 //         }
 //       }
 //     }
-  }
+// }
 }
