@@ -130,7 +130,7 @@ stage('Create resource Azure Terraform') {
             remote.user = 'root'
             remote.password = '111111aA'
         }
-        sshCommand remote: remoteServer, command: 'whoami'
+        sshCommand remote: remote, command: 'terraform --version'
 
     }
 }
