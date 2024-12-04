@@ -80,8 +80,14 @@ pipeline {
     //     }
     //   }
     // }
+    
     stage('Install Tools') {
             steps {
+              container('docker') {
+                script {
+                sh 'apt update && apt install -y sshpass'
+              }
+          }
                 script {
                     sh '''
                 apt install sshpass
