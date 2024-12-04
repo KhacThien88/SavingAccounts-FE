@@ -91,6 +91,7 @@ pipeline {
             steps {
                 script {
                     remote.user = 'root'
+                    remote.password = '111111aA'
                 }
                 sshCommand(remote: remote , command: "whoami")
             }
