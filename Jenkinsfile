@@ -124,39 +124,21 @@ pipeline {
 }
 
 
-stage('Create resource azure Terraform') {
+stage('Create resource Azure Terraform') {
     steps {
         script {
             remote.user = 'root'
             remote.password = '111111aA'
         }
         sshCommand(remote: remote, command: """
-            whoami
-            cd ~/demo_linux/terraform-azure
-            echo "Initializing Terraform"
-            terraform init
-
-            echo "Running terraform plan"
-            terraform plan -out main.tfplan
-
-            echo "Applying Terraform plan"
-            terraform apply -auto-approve main.tfplan
-            if [ \$? -ne 0 ]; then
-                echo "Terraform apply failed!"
-                exit 1
-            else
-                echo "Terraform apply successful"
-            fi
-            
-            # Capture the VM public IPs using Terraform outputs
-            vm1_host=\$(terraform output -raw public_ip_vm_1)
-            vm2_host=\$(terraform output -raw public_ip_vm_2)
-            echo "VM1 IP: \$vm1_host"
-            echo "VM2 IP: \$vm2_host"
-        """)
-    }
-}
-
+          whoami
+          cd ~/demo_linux/terraform-azure
+          pwd
+          sh 'terraform init'
+          sh 'terraform plan -out main.tfplan'
+          sh "terraform apply main.tfplan"
+    fi
+""")
     }
 }
     
