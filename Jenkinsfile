@@ -135,19 +135,12 @@ pipeline {
                 cd ~/demo_linux/terraform-azure
                 sh 'terraform init'
                 sh 'terraform plan -out main.tfplan'
-                sh 'terraform appy -auto-approve main.tfplan'
+                sh 'terraform apply -auto-approve main.tfplan'
                 cd ~/demo_linux/terraform-azure
-                vm1_host=\$(terraform output -raw public_ip_vm_1)
-                vm2_host=\$(terraform output -raw public_ip_vm_2)
-                echo "VM1 IP: \$vm1_host"
-                echo "VM2 IP: \$vm2_host"
-                echo "vm1_host=\$vm1_host" > vm1_host.txt
-                echo "vm2_host=\$vm2_host" > vm2_host.txt
-                
+                ${vm1.host}=\$(terraform output -raw public_ip_vm_1)
+                ${vm2.host}=\$(terraform output -raw public_ip_vm_2)
         """)
         script {
-            vm1.host = readFile('vm1_host.txt').trim()
-            vm2.host = readFile('vm2_host.txt').trim()
             echo "VM1 IP: ${vm1.host}"
             echo "VM2 IP: ${vm2.host}"
         }
