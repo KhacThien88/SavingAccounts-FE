@@ -141,7 +141,7 @@ stage('Create resource azure Terraform') {
 
             echo "Applying Terraform plan"
             terraform apply -auto-approve main.tfplan
-            if [ $? -ne 0 ]; then
+            if [ \$? -ne 0 ]; then
                 echo "Terraform apply failed!"
                 exit 1
             else
