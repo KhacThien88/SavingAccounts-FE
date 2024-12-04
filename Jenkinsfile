@@ -84,6 +84,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                apt install sshpass
                 sshpass -p '111111aA' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t root@192.168.23.138 <<EOF
                     if ! command -v terraform &> /dev/null
                     then
