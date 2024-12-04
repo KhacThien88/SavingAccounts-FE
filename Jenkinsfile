@@ -84,16 +84,24 @@ pipeline {
             steps {
                 script {
                     sh '''
-                ssh -t root@192.168.23.138 <<EOF
+                ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t root@192.168.23.138 <<EOF
                     sudo apt update
                     sudo apt install -y wget unzip curl jq
 
                     if ! command -v terraform &> /dev/null
                     then
                         echo "Terraform not found, installing..."
-                        wget https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)_linux_amd64.zip
-                        unzip terraform_*.zip
-                        sudo mv terraform /usr/local/bin/
+                        sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+                        wget -O- https://apt.releases.hashicorp.com/gpg | \
+                        gpg --dearmor | \
+                        gpg --no-default-keyring \
+                        --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+                        --fingerprint
+                        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+                        https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+                        sudo tee /etc/apt/sources.list.d/hashicorp.list
+                        sudo apt update
+                        sudo apt-get install terraform
                     else
                         echo "Terraform is already installed"
                     fi
