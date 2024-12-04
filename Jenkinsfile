@@ -84,11 +84,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                ssh root@192.168.23.138 <<EOF
+                ssh -t root@192.168.23.138 <<EOF
                     sudo apt update
                     sudo apt install -y wget unzip curl jq
 
-                    # Cài đặt Terraform nếu chưa có
                     if ! command -v terraform &> /dev/null
                     then
                         echo "Terraform not found, installing..."
