@@ -131,18 +131,17 @@ stage('Create resource azure Terraform') {
             remote.password = '111111aA'
         }
         sshCommand(remote: remote, command: """
-            whoami
-            cd ~/demo_linux/terraform-azure
-            sh 'terraform init'
-            sh 'terraform plan -out main.tfplan'
-            sh 'terraform apply -auto-approve main.tfplan'
-            
-            # Capture the VM public IPs using Terraform outputs
-            vm1_host=\$(terraform output -raw public_ip_vm_1)
-            vm2_host=\$(terraform output -raw public_ip_vm_2)
-            
-
-        """)
+    whoami
+    cd ~/demo_linux/terraform-azure
+    sh 'terraform init'
+    sh 'terraform plan -out main.tfplan'
+    if sh 'terraform apply -auto-approve main.tfplan'; then
+        echo "Terraform apply successful"
+    else
+        echo "Terraform apply failed"
+        exit 1
+    fi
+""")
     }
 }
     
