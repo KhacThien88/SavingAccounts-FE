@@ -137,7 +137,6 @@ stage('Create resource Azure Terraform') {
           sh 'terraform init'
           sh 'terraform plan -out main.tfplan'
           sh "terraform apply main.tfplan"
-    fi
 """)
     }
 }
