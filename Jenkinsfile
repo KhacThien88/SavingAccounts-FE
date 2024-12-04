@@ -92,7 +92,7 @@ pipeline {
                 script {
                     remote.user = 'root'
                 }
-                sshComand(remote: remote , command: "whoami")
+                sshCommand(remote: remote , command: "whoami")
             }
     }
 //     stage('Create resource azure Terraform'){
