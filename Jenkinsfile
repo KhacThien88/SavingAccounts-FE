@@ -57,47 +57,49 @@ pipeline {
       }
     }
 
-    stage('Build image') {
-      steps {
-        container('docker') {
-          script {
-            sh 'docker pull node:latest'
-            sh 'docker pull nginx:stable-alpine'
-            sh 'docker build --network=host -t ktei8htop15122004/savingaccountfe .'
-          }
-        }
-      }
-    }
+    // stage('Build image') {
+    //   steps {
+    //     container('docker') {
+    //       script {
+    //         sh 'docker pull node:latest'
+    //         sh 'docker pull nginx:stable-alpine'
+    //         sh 'docker build --network=host -t ktei8htop15122004/savingaccountfe .'
+    //       }
+    //     }
+    //   }
+    // }
 
-    stage('Pushing Image') {
-      steps {
-        container('docker') {
-          script {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            sh 'docker tag ktei8htop15122004/savingaccountfe ktei8htop15122004/savingaccountfe'
-            sh 'docker push ktei8htop15122004/savingaccountfe:latest'
-          }
-        }
-      }
-    }
+    // stage('Pushing Image') {
+    //   steps {
+    //     container('docker') {
+    //       script {
+    //         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+    //         sh 'docker tag ktei8htop15122004/savingaccountfe ktei8htop15122004/savingaccountfe'
+    //         sh 'docker push ktei8htop15122004/savingaccountfe:latest'
+    //       }
+    //     }
+    //   }
+    // }
     stage('Install Tools') {
             steps {
                 script {
                     sh '''
-                        apt update
-                        apt install -y wget unzip curl jq
+                ssh root@192.168.23.138 <<EOF
+                    sudo apt update
+                    sudo apt install -y wget unzip curl jq
 
-                        # Cài đặt Terraform (nếu chưa có)
-                        if ! command -v terraform &> /dev/null
-                        then
-                            echo "Terraform not found, installing..."
-                            wget https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)_linux_amd64.zip
-                            unzip terraform_*.zip
-                            mv terraform /usr/local/bin/
-                        else
-                            echo "Terraform is already installed"
-                        fi
-                    '''
+                    # Cài đặt Terraform nếu chưa có
+                    if ! command -v terraform &> /dev/null
+                    then
+                        echo "Terraform not found, installing..."
+                        wget https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)_linux_amd64.zip
+                        unzip terraform_*.zip
+                        sudo mv terraform /usr/local/bin/
+                    else
+                        echo "Terraform is already installed"
+                    fi
+                EOF
+            '''
                 }
             }
     }
