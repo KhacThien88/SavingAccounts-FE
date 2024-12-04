@@ -86,7 +86,8 @@ pipeline {
     stage('Copy resource'){
         steps {
           script {
-            sh 'cp /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure/provider.tf ./terraform-azure/provider.tf '
+            sh 'ls -l ~/demo_linux/terraform-azure/provider.tf '
+            sh 'cp ~/demo_linux/terraform-azure/provider.tf /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure/provider.tf'
           }
         }
     }    
