@@ -90,7 +90,7 @@ pipeline {
     stage('Install Tools') {
             steps {
                 script {
-                    remote.user = root
+                    remote.user = 'root'
                 }
                 sshComand(remote: remote , command: "whoami")
             }
