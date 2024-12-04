@@ -88,23 +88,44 @@ pipeline {
     // }
     
     stage('Install Tools') {
-            steps {
-                script {
-                    remote.user = 'root'
-                    remote.password = '111111aA'
-                }
-                sshCommand(remote: remote , command: "whoami")
-            }
-    }
-    stage('Create resource azure Terraform'){
-      steps {
-        script{
-          sh 'terraform init ~/demo_linux/terraform-azure'
-          sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
-          sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+    steps {
+        script {
+            remote.user = 'root'
+            remote.password = '111111aA'
         }
-      }
+        sshCommand(remote: remote, command: """
+            if ! command -v terraform &> /dev/null
+            then
+                echo "Terraform not found, installing..."
+                sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+                wget -O- https://apt.releases.hashicorp.com/gpg | \
+                gpg --dearmor | \
+                sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+                gpg --no-default-keyring \
+                --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+                --fingerprint
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+                https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+                sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt update
+                sudo apt-get install terraform
+
+            else
+                echo "Terraform is already installed"
+            fi
+        """)
     }
+}
+
+    // stage('Create resource azure Terraform'){
+    //   steps {
+    //     script{
+    //       sh 'terraform init ~/demo_linux/terraform-azure'
+    //       sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
+    //       sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+    //     }
+    //   }
+    // }
     
 //     stage('Install script in VM'){
 //       steps{
