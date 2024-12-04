@@ -84,13 +84,11 @@ pipeline {
             steps {
                 script {
                     sh '''
-                ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t root@192.168.23.138 <<EOF
-                    sudo apt update
-                    sudo apt install -y wget unzip curl jq
-
+                sshpass -p '111111aA' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t root@192.168.23.138 <<EOF
                     if ! command -v terraform &> /dev/null
                     then
                         echo "Terraform not found, installing..."
+                        sudo su
                         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
                         wget -O- https://apt.releases.hashicorp.com/gpg | \
                         gpg --dearmor | \
