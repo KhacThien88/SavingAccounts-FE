@@ -117,15 +117,19 @@ pipeline {
 }
 
 
-    // stage('Create resource azure Terraform'){
-    //   steps {
-    //     script{
-    //       sh 'terraform init ~/demo_linux/terraform-azure'
-    //       sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
-    //       sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
-    //     }
-    //   }
-    // }
+    stage('Create resource azure Terraform'){
+        steps {
+        script {
+            remote.user = 'root'
+            remote.password = '111111aA'
+        }
+        sshCommand(remote: remote, command: """
+                sh 'terraform init ~/demo_linux/terraform-azure'
+                sh 'terraform plan -out ~/demo_linux/terraform-azure/main.tfplan'
+                sh 'terraform appy -auto-approve ~/demo_linux/terraform-azure/main.tfplan'
+        """)
+    }
+    }
     
 //     stage('Install script in VM'){
 //       steps{
