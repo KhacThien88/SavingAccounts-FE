@@ -86,6 +86,7 @@ pipeline {
     stage('Add provider in Terraform'){
         steps {
           script {
+            sh 'ls -l /tmp'
             sh 'cp /tmp/provider.tf /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure/provider.tf'
           }
         }
