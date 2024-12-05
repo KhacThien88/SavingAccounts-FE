@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     if (!fileExists('SavingAccounts-FE')) {
-                        mkdir(dir:"SavingAccounts-FE")
+                        sh "mkdir SavingAccounts-FE"
                         sh 'cd SavingAccounts-FE'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
@@ -77,9 +77,10 @@ pipeline {
     stage('Checkout resource') {
             steps {
                 script {
-                    if (!fileExists('terraform-azure')) {
+                        sh 'pwd'
                         sh 'cd ../'
-                        mkdir(dir:"terraform-azure")
+                    if (!fileExists('terraform-azure')) {
+                        sh "mkdir terraform-azure"
                         sh 'terraform-azure'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
@@ -96,39 +97,32 @@ pipeline {
                 }
             }
         }
-    stage('Add provider in Terraform'){
-        steps {
-          script {
-            sh 'ls -l /var/jenkins_home'
-          }
+    stage('Install Terraform') {
+    steps {
+        script {
+            """
+            if ! command -v terraform &> /dev/null
+            then
+                echo "Terraform not found, installing..."
+                sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+                wget -O- https://apt.releases.hashicorp.com/gpg | \
+                gpg --dearmor | \
+                sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+                gpg --no-default-keyring \
+                --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+                --fingerprint
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+                https://apt.releases.hashicorp.com \$(lsb_release -cs) main" | \
+                sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt update
+                sudo apt-get install terraform
+            else
+                echo "Terraform is already installed"
+            fi 
+        """
         }
-    }    
-    // stage('Install Terraform') {
-    // steps {
-    //     script {
-    //         """
-    //         if ! command -v terraform &> /dev/null
-    //         then
-    //             echo "Terraform not found, installing..."
-    //             sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
-    //             wget -O- https://apt.releases.hashicorp.com/gpg | \
-    //             gpg --dearmor | \
-    //             sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-    //             gpg --no-default-keyring \
-    //             --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
-    //             --fingerprint
-    //             echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-    //             https://apt.releases.hashicorp.com \$(lsb_release -cs) main" | \
-    //             sudo tee /etc/apt/sources.list.d/hashicorp.list
-    //             sudo apt update
-    //             sudo apt-get install terraform
-    //         else
-    //             echo "Terraform is already installed"
-    //         fi 
-    //     """
-    //     }
-    // }
-    // }
+    }
+    }
     stage('Unit Test') {
       when {
         expression {
