@@ -60,29 +60,27 @@ pipeline {
   }
   
   stages {
-    stage('Checkout Code') {
-            steps {
-                script {
-                    if (!fileExists('SavingAccounts-FE')) {
-                        sh "mkdir /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE"
-                        sh 'cd /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE'
-                        sh 'pwd'
-                        echo 'Checking out code from Git repository...'
-                        git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
-                    } else {
-                        echo 'Code already checked out, skipping.'
-                    }
-                }
-            }
-        }
+    // stage('Checkout Code') {
+    //         steps {
+    //             script {
+    //                 if (!fileExists('SavingAccounts-FE')) {
+    //                     sh "mkdir /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE"
+    //                     sh 'cd /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE'
+    //                     sh 'pwd'
+    //                     echo 'Checking out code from Git repository...'
+    //                     git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
+    //                 } else {
+    //                     echo 'Code already checked out, skipping.'
+    //                 }
+    //             }
+    //         }
+    //     }
     stage('Checkout resource') {
             steps {
                 script {
                         sh 'ls -l /home/jenkins/agent/workspace/SavingAccount_main'
                         sh 'pwd'
                     if (!fileExists('terraform-azure')) {
-                        sh "mkdir /home/jenkins/agent/workspace/SavingAccount_main/terraform-azure"
-                        sh 'cd /home/jenkins/agent/workspace/SavingAccount_main/terraform-azure'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
                     } else {
@@ -98,6 +96,16 @@ pipeline {
                 }
             }
         }
+    stage('Install Dependencies') {
+    steps {
+        script {
+            sh '''
+            apt-get update
+            apt-get install -y sudo wget gnupg
+            '''
+        }
+    }
+}
     stage('Install Terraform') {
     steps {
         script {
