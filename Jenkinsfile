@@ -83,6 +83,14 @@ pipeline {
                 }
             }
         }
+    stage('Print environment info') {
+      steps {
+        script {
+            sh 'echo $PWD'  // In thư mục làm việc hiện tại
+            sh 'env'         // In tất cả các biến môi trường
+        }
+    }
+}
     stage('Add provider in Terraform'){
         steps {
           script {
