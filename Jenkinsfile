@@ -94,7 +94,7 @@ pipeline {
     stage('Add provider in Terraform'){
         steps {
           script {
-            sh 'ls -l $PWD'
+            sh 'ls -l /var/jenkins_home'
           }
         }
     }    
