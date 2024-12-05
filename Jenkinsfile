@@ -13,6 +13,7 @@ vm2.allowAnyHosts = true
 
 pipeline {
   environment {
+    PROVIDER_TF = credentials('provider-azure')
     dockerimagename = "ktei8htop15122004/savingaccountfe"
     dockerImage = ""
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
@@ -59,38 +60,42 @@ pipeline {
   }
   
   stages {
-    // stage('Checkout Code') {
-    //         steps {
-    //             script {
-    //                 if (!fileExists('SavingAccounts-FE')) {
-    //                     echo 'Checking out code from Git repository...'
-    //                     git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
-    //                 } else {
-    //                     echo 'Code already checked out, skipping.'
-    //                 }
-    //             }
-    //         }
-    //     }
-    // stage('Checkout resource') {
-    //         steps {
-    //             script {
-    //                 if (!fileExists('terraform-azure')) {
-    //                     echo 'Checking out code from Git repository...'
-    //                     git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
-    //                 } else {
-    //                     echo 'Code already checked out, skipping.'
-    //                 }
-    //             }
-    //         }
-    //     }
-    stage('Print environment info') {
-      steps {
-        script {
-            sh 'echo $PWD'    
-            sh 'ls -l $PWD'
+    stage('Checkout Code') {
+            steps {
+                script {
+                    if (!fileExists('SavingAccounts-FE')) {
+                        mkdir(dir:"SavingAccounts-FE")
+                        sh 'cd SavingAccounts-FE'
+                        echo 'Checking out code from Git repository...'
+                        git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
+                    } else {
+                        echo 'Code already checked out, skipping.'
+                    }
+                }
+            }
         }
-    }
-}
+    stage('Checkout resource') {
+            steps {
+                script {
+                    if (!fileExists('terraform-azure')) {
+                        sh 'cd ../'
+                        mkdir(dir:"terraform-azure")
+                        sh 'terraform-azure'
+                        echo 'Checking out code from Git repository...'
+                        git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
+                    } else {
+                        echo 'Code already checked out, skipping.'
+                    }
+                }
+            }
+        }
+   stage('Setup Terraform') {
+            steps {
+                script {
+                    writeFile file: 'provider.tf', text: "${env.PROVIDER_TF}"
+                }
+            }
+        }
     stage('Add provider in Terraform'){
         steps {
           script {
