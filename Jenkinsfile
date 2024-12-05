@@ -66,6 +66,7 @@ pipeline {
                     if (!fileExists('SavingAccounts-FE')) {
                         sh "mkdir SavingAccounts-FE"
                         sh 'cd SavingAccounts-FE'
+                        sh 'pwd'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
                     } else {
@@ -77,11 +78,12 @@ pipeline {
     stage('Checkout resource') {
             steps {
                 script {
+                        sh 'ls -l /home/jenkins/agent/workspace/SavingAccount_main'
                         sh 'pwd'
                         sh 'cd ../'
                     if (!fileExists('terraform-azure')) {
                         sh "mkdir terraform-azure"
-                        sh 'terraform-azure'
+                        sh 'cd terraform-azure'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
                     } else {
