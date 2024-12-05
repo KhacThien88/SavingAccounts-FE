@@ -83,11 +83,10 @@ pipeline {
                 }
             }
         }
-    stage('Copy resource'){
+    stage('Add provider in Terraform'){
         steps {
           script {
-            sh 'ls -l /home/jenkins/agent'
-            sh 'cp ~/agent/provider.tf /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure/provider.tf'
+            sh 'cp /tmp/provider.tf /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure/provider.tf'
           }
         }
     }    
