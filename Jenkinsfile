@@ -64,8 +64,8 @@ pipeline {
             steps {
                 script {
                     if (!fileExists('SavingAccounts-FE')) {
-                        sh "mkdir SavingAccounts-FE"
-                        sh 'cd SavingAccounts-FE'
+                        sh "mkdir /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE"
+                        sh 'cd /home/jenkins/agent/workspace/SavingAccount_main/SavingAccounts-FE'
                         sh 'pwd'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/SavingAccounts-FE.git", branch: "main"
@@ -80,10 +80,9 @@ pipeline {
                 script {
                         sh 'ls -l /home/jenkins/agent/workspace/SavingAccount_main'
                         sh 'pwd'
-                        sh 'cd ../'
                     if (!fileExists('terraform-azure')) {
-                        sh "mkdir terraform-azure"
-                        sh 'cd terraform-azure'
+                        sh "mkdir /home/jenkins/agent/workspace/SavingAccount_main/terraform-azure"
+                        sh 'cd /home/jenkins/agent/workspace/SavingAccount_main/terraform-azure'
                         echo 'Checking out code from Git repository...'
                         git url: "https://github.com/KhacThien88/terraform-azure.git", branch: "main"
                     } else {
@@ -102,7 +101,7 @@ pipeline {
     stage('Install Terraform') {
     steps {
         script {
-            """
+            sh '''
             if ! command -v terraform &> /dev/null
             then
                 echo "Terraform not found, installing..."
@@ -120,11 +119,11 @@ pipeline {
                 sudo apt-get install terraform
             else
                 echo "Terraform is already installed"
-            fi 
-        """
+            fi
+            '''
         }
     }
-    }
+}
     stage('Unit Test') {
       when {
         expression {
