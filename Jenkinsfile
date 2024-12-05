@@ -87,6 +87,7 @@ pipeline {
       steps {
         script {
             sh 'echo $PWD'    
+            sh 'ls -l $PWD'
         }
     }
 }
@@ -133,16 +134,16 @@ pipeline {
         sh 'echo Unit Test'
       }
     }
-    stage('Create Resource Terraform in Azure'){
-      steps{
-        script{
-          sh 'cd /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure'
-          sh 'terraform init'
-          sh 'terraform plan -out main.tfplan'
-          sh 'terraform apply main.tfplan'
-        }
-      }
-    }
+    // stage('Create Resource Terraform in Azure'){
+    //   steps{
+    //     script{
+    //       sh 'cd /home/jenkins/agent/workspace/Pipeline-SavingAccountFE_main/terraform-azure'
+    //       sh 'terraform init'
+    //       sh 'terraform plan -out main.tfplan'
+    //       sh 'terraform apply main.tfplan'
+    //     }
+    //   }
+    // }
 
    
 
