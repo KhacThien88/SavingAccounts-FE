@@ -60,6 +60,13 @@ pipeline {
   // }
   agent any
   stages {
+    stage('Check Agent') {
+            steps {
+                script {
+                    echo "Running on agent: ${env.NODE_NAME}"
+                }
+            }
+        }
     stage('Unit Test') {
       when {
         expression {
