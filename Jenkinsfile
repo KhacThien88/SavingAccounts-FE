@@ -67,7 +67,7 @@ pipeline {
         }
       }
       steps {
-        sh 'echo Unit Test FrontEnd'
+        sh 'echo Unit Test'
       }
     }
 
