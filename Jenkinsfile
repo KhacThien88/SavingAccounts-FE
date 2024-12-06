@@ -72,26 +72,22 @@ pipeline {
     }
 
     stage('Build image') {
-      steps {
-        container('docker') {
+      steps {    
           script {
             sh 'docker pull node:latest'
             sh 'docker pull nginx:stable-alpine'
             sh 'docker build --network=host -t ktei8htop15122004/savingaccountfe .'
           }
-        }
       }
     }
 
     stage('Pushing Image') {
       steps {
-        container('docker') {
           script {
             sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             sh 'docker tag ktei8htop15122004/savingaccountfe ktei8htop15122004/savingaccountfe'
             sh 'docker push ktei8htop15122004/savingaccountfe:latest'
           }
-        }
       }
     }
     
